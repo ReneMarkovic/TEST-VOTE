@@ -4,11 +4,11 @@
   "stage": "delni",
   "hasResults": true,
   "casUdelezba": "19:00",
-  "dvkUpdatedAt": "15. 11. 2026 ob 20:50",
-  "dvkVotesCounted": 113,
-  "dvkCountedPct": 1.68,
+  "dvkUpdatedAt": "15. 11. 2026 ob 20:55",
+  "dvkVotesCounted": 191,
+  "dvkCountedPct": 2.82,
   "invalidBallotsMayor": 3,
-  "lastUpdatedLabel": "Delni izidi DVK (preštetih 1,68 % · 113 glasov · osveženo 20:50)",
+  "lastUpdatedLabel": "Delni izidi DVK (preštetih 2,82 % · 191 glasov · osveženo 20:55)",
   "eligibleVotersMunicipality": 20336,
   "turnout": [
     {
@@ -34,10 +34,10 @@
     {
       "label": "Končna udeležba ob 19:00",
       "time": "19:00",
-      "municipalityPct": 33.11,
+      "municipalityPct": 33.33,
       "pragerskoPct": null,
-      "sloveniaPct": 42.34,
-      "municipalityVoters": 6734,
+      "sloveniaPct": 42.62,
+      "municipalityVoters": 6778,
       "municipalityEligible": 20336,
       "certificatesCount": null
     }
@@ -46,22 +46,22 @@
     {
       "id": "zagar",
       "name": "dr. Ivan Žagar",
-      "votes": 72
+      "votes": 132
     },
     {
       "id": "cvahte",
       "name": "dr. Peter Cvahte",
-      "votes": 12
+      "votes": 23
     },
     {
       "id": "gosnik",
       "name": "Edita Gošnik",
-      "votes": 22
+      "votes": 28
     },
     {
       "id": "spaninger",
       "name": "Matej Španinger",
-      "votes": 4
+      "votes": 5
     }
   ],
   "councilLists": [
