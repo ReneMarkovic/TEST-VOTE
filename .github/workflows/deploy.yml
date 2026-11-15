@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '*/2 * * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -14,7 +14,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -22,8 +22,11 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -40,16 +43,23 @@ jobs:
 
       - name: Shrani posodobljen public/lv2026-data.json
         if: github.ref == 'refs/heads/main' && steps.fetch_dvk.outcome == 'success'
+        shell: bash
         run: |
-          if ! git diff --quiet public/lv2026-data.json; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add public/lv2026-data.json
-            git commit -m "Samodejna posodobitev podatkov DVK lv2026 [skip ci]"
-            git push
-          else
+          set -e
+
+          if git diff --quiet -- public/lv2026-data.json; then
             echo "Podatki v public/lv2026-data.json so že najnovejši."
+            exit 0
           fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git pull --rebase origin main
+
+          git add public/lv2026-data.json
+          git commit -m "Samodejna posodobitev podatkov DVK lv2026 [skip ci]"
+          git push origin HEAD:main
 
       - name: Install dependencies
         run: |
