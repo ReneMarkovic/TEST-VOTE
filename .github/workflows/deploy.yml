@@ -41,29 +41,28 @@ jobs:
         continue-on-error: true
         run: python3 scripts/fetch_dvk_lv2026.py
 
-- name: Shrani posodobljen public/lv2026-data.json
-  if: github.ref == 'refs/heads/main' && steps.fetch_dvk.outcome == 'success'
-  shell: bash
-  run: |
-    set -e
+      - name: Shrani posodobljen public/lv2026-data.json
+        if: github.ref == 'refs/heads/main' && steps.fetch_dvk.outcome == 'success'
+        shell: bash
+        run: |
+          set -e
 
-    if git diff --quiet -- public/lv2026-data.json; then
-      echo "Podatki v public/lv2026-data.json so že najnovejši."
-      exit 0
-    fi
+          if git diff --quiet -- public/lv2026-data.json; then
+            echo "Podatki v public/lv2026-data.json so že najnovejši."
+            exit 0
+          fi
 
-    git config user.name "github-actions[bot]"
-    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    git pull --rebase --autostash origin main
-
-    git add public/lv2026-data.json
-    if ! git diff --cached --quiet; then
-      git commit -m "Samodejna posodobitev podatkov DVK lv2026 [skip ci]"
-      git push origin HEAD:main
-    else
-      echo "Ničesar ni treba shraniti."
-    fi
+          git add public/lv2026-data.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Samodejna posodobitev podatkov DVK lv2026 [skip ci]"
+            git pull --rebase -X theirs origin main
+            git push origin HEAD:main
+          else
+            echo "Ničesar ni treba shraniti."
+          fi
 
       - name: Install dependencies
         run: |
