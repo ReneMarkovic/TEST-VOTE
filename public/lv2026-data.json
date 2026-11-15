@@ -4,11 +4,11 @@
   "stage": "delni",
   "hasResults": true,
   "casUdelezba": "19:00",
-  "dvkUpdatedAt": "15. 11. 2026 ob 20:55",
+  "dvkUpdatedAt": "15. 11. 2026 ob 21:00",
   "dvkVotesCounted": 191,
   "dvkCountedPct": 2.82,
   "invalidBallotsMayor": 3,
-  "lastUpdatedLabel": "Delni izidi DVK (preštetih 2,82 % · 191 glasov · osveženo 20:55)",
+  "lastUpdatedLabel": "Delni izidi DVK (preštetih 2,82 % · 191 glasov · osveženo 21:00)",
   "eligibleVotersMunicipality": 20336,
   "turnout": [
     {
@@ -36,7 +36,7 @@
       "time": "19:00",
       "municipalityPct": 33.33,
       "pragerskoPct": null,
-      "sloveniaPct": 42.62,
+      "sloveniaPct": 42.93,
       "municipalityVoters": 6778,
       "municipalityEligible": 20336,
       "certificatesCount": null
@@ -70,10 +70,10 @@
       "votesByUnit": {
         "ve1": 18,
         "ve2": 0,
-        "ve3": 34,
+        "ve3": 60,
         "ve4": 0
       },
-      "dvkTotalVotes": 52,
+      "dvkTotalVotes": 78,
       "knownSeatsOverride": null
     },
     {
@@ -81,10 +81,10 @@
       "votesByUnit": {
         "ve1": 19,
         "ve2": 0,
-        "ve3": 9,
+        "ve3": 42,
         "ve4": 0
       },
-      "dvkTotalVotes": 28,
+      "dvkTotalVotes": 61,
       "knownSeatsOverride": null
     },
     {
@@ -92,10 +92,10 @@
       "votesByUnit": {
         "ve1": 16,
         "ve2": 0,
-        "ve3": 1,
+        "ve3": 5,
         "ve4": 0
       },
-      "dvkTotalVotes": 17,
+      "dvkTotalVotes": 21,
       "knownSeatsOverride": null
     },
     {
@@ -103,10 +103,10 @@
       "votesByUnit": {
         "ve1": 4,
         "ve2": 0,
-        "ve3": 1,
+        "ve3": 6,
         "ve4": 0
       },
-      "dvkTotalVotes": 5,
+      "dvkTotalVotes": 10,
       "knownSeatsOverride": null
     },
     {
@@ -114,10 +114,10 @@
       "votesByUnit": {
         "ve1": 8,
         "ve2": 0,
-        "ve3": 0,
+        "ve3": 9,
         "ve4": 0
       },
-      "dvkTotalVotes": 8,
+      "dvkTotalVotes": 17,
       "knownSeatsOverride": null
     },
     {
@@ -125,10 +125,10 @@
       "votesByUnit": {
         "ve1": 0,
         "ve2": 0,
-        "ve3": 0,
+        "ve3": 1,
         "ve4": 0
       },
-      "dvkTotalVotes": 0,
+      "dvkTotalVotes": 1,
       "knownSeatsOverride": null
     },
     {
