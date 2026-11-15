@@ -18,6 +18,12 @@ export const TurnoutSection: React.FC<TurnoutSectionProps> = ({
   const baseline2022Municipality = 43.31;
   const baseline2022Slovenia = 47.59;
 
+  const latestCp =
+    [...dataset.turnout]
+      .reverse()
+      .find((t) => t.municipalityPct !== null) ?? dataset.turnout[0];
+  const cp11 = dataset.turnout.find((t) => t.time === '11:00');
+
   return (
     <section
       id="udelezba"
@@ -32,8 +38,26 @@ export const TurnoutSection: React.FC<TurnoutSectionProps> = ({
             Primerjava volilne udeležbe po urah
           </h2>
           <p className="text-sm text-slate-600 max-w-2xl">
-            {mode === 'lv2026'
-              ? 'Občina Slovenska Bistrica je do 16. ure zabeležila 33,02 % udeležbo (6.715 od 20.336 volilnih upravičencev, 3 s potrdilom; Slovenija 36,77 %). Ob 11. uri je bila udeležba 11,56 % (2.351 volivcev).'
+            {mode === 'lv2026' && latestCp
+              ? `Občina Slovenska Bistrica je do ${latestCp.time} zabeležila ${formatPct(
+                  latestCp.municipalityPct
+                )} udeležbo${
+                  latestCp.municipalityVoters && latestCp.municipalityEligible
+                    ? ` (${latestCp.municipalityVoters.toLocaleString('sl-SI')} od ${latestCp.municipalityEligible.toLocaleString('sl-SI')} volilnih upravičencev${
+                        latestCp.certificatesCount
+                          ? `, ${latestCp.certificatesCount} s potrdilom`
+                          : ''
+                      }; Slovenija ${formatPct(latestCp.sloveniaPct)})`
+                    : ''
+                }.${
+                  cp11 && latestCp.time !== '11:00' && cp11.municipalityPct !== null
+                    ? ` Ob 11. uri je bila udeležba ${formatPct(cp11.municipalityPct)}${
+                        cp11.municipalityVoters
+                          ? ` (${cp11.municipalityVoters.toLocaleString('sl-SI')} volivcev)`
+                          : ''
+                      }.`
+                    : ''
+                }`
               : 'Uradna končna volilna udeležba na lokalnih volitvah 20. novembra 2022 (1. krog) za Občino Slovenska Bistrica in državno povprečje.'}
           </p>
         </div>

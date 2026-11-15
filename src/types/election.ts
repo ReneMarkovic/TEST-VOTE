@@ -70,6 +70,10 @@ export interface ElectionDataset {
   year: number;
   dateLabel: string;
   stage: ElectionStage;
+  hasResults?: boolean;
+  casUdelezba?: string | null;
+  dvkUpdatedAt?: string | null;
+  dvkVotesCounted?: number | null;
   lastUpdatedLabel: string;
   sourceNote: string;
   eligibleVotersMunicipality: number | null;

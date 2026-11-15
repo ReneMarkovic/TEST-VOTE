@@ -1,12 +1,14 @@
-name: Deploy site to GitHub Pages
+name: Sync DVK data & deploy GitHub Pages
 
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -22,18 +24,46 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
+
+      - name: Prenos zadnjih podatkov DVK (lv2026)
+        id: fetch_dvk
+        continue-on-error: true
+        run: node scripts/fetch-dvk-lv2026.mjs
+
+      - name: Shrani posodobljen public/lv2026-data.json
+        if: github.ref == 'refs/heads/main' && steps.fetch_dvk.outcome == 'success'
+        run: |
+          if ! git diff --quiet public/lv2026-data.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/lv2026-data.json
+            git commit -m "Samodejna posodobitev podatkov DVK lv2026 [skip ci]"
+            git push
+          else
+            echo "Podatki v public/lv2026-data.json so že najnovejši."
+          fi
+
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
+
       - name: Build site
         run: npm run build
+
       - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+
       - name: Deploy site
         id: deployment
         uses: actions/deploy-pages@v4

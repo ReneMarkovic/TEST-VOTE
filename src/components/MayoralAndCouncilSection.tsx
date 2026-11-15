@@ -94,7 +94,7 @@ export const MayoralAndCouncilSection: React.FC<MayoralAndCouncilSectionProps> =
               <>
                 <Clock className="w-4 h-4 text-slate-500 shrink-0" aria-hidden="true" />
                 <span>
-                  Potrjeni so 4 uradni kandidati. Glasovi se prikažejo po začetku štetja po 19:00.
+                  Čakanje na rezultate: potrjeni so 4 uradni kandidati, županski glasovi na DVK še niso objavljeni (objava po 19:00).
                 </span>
               </>
             )}
@@ -204,6 +204,17 @@ export const MayoralAndCouncilSection: React.FC<MayoralAndCouncilSectionProps> =
             )}
           </div>
         </div>
+
+        {mode === 'lv2026' && !councilOutcome.hasVoteData && (
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm">
+            <div className="flex items-center gap-2.5 text-slate-700 font-medium">
+              <Clock className="w-4 h-4 text-slate-500 shrink-0" aria-hidden="true" />
+              <span>
+                Čakanje na rezultate občinskega sveta (DVK rezultati še niso objavljeni; prikazan je seznam 9 potrjenih list in primerjava z letom 2022).
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* 31-seat visual bar */}
         <div className="space-y-3">

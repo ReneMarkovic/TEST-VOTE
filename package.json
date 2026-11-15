@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "sync:dvk": "node scripts/fetch-dvk-lv2026.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

@@ -2,6 +2,10 @@
   "year": 2026,
   "dateLabel": "15. november 2026",
   "stage": "v_teku",
+  "hasResults": false,
+  "casUdelezba": "16:00",
+  "dvkUpdatedAt": "15. 11. 2026 ob 17:00",
+  "dvkVotesCounted": 0,
   "lastUpdatedLabel": "Udeležba ob 16:00: SB 33,02 % · SI 36,77 % (osveženo DVK 17:00)",
   "eligibleVotersMunicipality": 20336,
   "turnout": [
@@ -12,7 +16,8 @@
       "pragerskoPct": null,
       "sloveniaPct": 12.85,
       "municipalityVoters": 2351,
-      "municipalityEligible": 20335
+      "municipalityEligible": 20335,
+      "certificatesCount": null
     },
     {
       "label": "Udeležba ob 16:00",
@@ -29,7 +34,115 @@
       "time": "19:00",
       "municipalityPct": null,
       "pragerskoPct": null,
-      "sloveniaPct": null
+      "sloveniaPct": null,
+      "municipalityVoters": null,
+      "municipalityEligible": null,
+      "certificatesCount": null
+    }
+  ],
+  "mayoralCandidates": [
+    {
+      "id": "zagar",
+      "name": "dr. Ivan Žagar",
+      "votes": null
+    },
+    {
+      "id": "cvahte",
+      "name": "dr. Peter Cvahte",
+      "votes": null
+    },
+    {
+      "id": "gosnik",
+      "name": "Edita Gošnik",
+      "votes": null
+    },
+    {
+      "id": "spaninger",
+      "name": "Matej Španinger",
+      "votes": null
+    }
+  ],
+  "councilLists": [
+    {
+      "id": "sls",
+      "votesByUnit": {
+        "ve1": null,
+        "ve2": null,
+        "ve3": null,
+        "ve4": null
+      }
+    },
+    {
+      "id": "sds",
+      "votesByUnit": {
+        "ve1": null,
+        "ve2": null,
+        "ve3": null,
+        "ve4": null
+      }
+    },
+    {
+      "id": "svoboda",
+      "votesByUnit": {
+        "ve1": null,
+        "ve2": null,
+        "ve3": null,
+        "ve4": null
+      }
+    },
+    {
+      "id": "sd",
+      "votesByUnit": {
+        "ve1": null,
+        "ve2": null,
+        "ve3": null,
+        "ve4": null
+      }
+    },
+    {
+      "id": "nsi-fokus",
+      "votesByUnit": {
+        "ve1": null,
+        "ve2": null,
+        "ve3": null,
+        "ve4": null
+      }
+    },
+    {
+      "id": "sg",
+      "votesByUnit": {
+        "ve1": null,
+        "ve2": null,
+        "ve3": null,
+        "ve4": null
+      }
+    },
+    {
+      "id": "demokrati",
+      "votesByUnit": {
+        "ve1": null,
+        "ve2": null,
+        "ve3": null,
+        "ve4": null
+      }
+    },
+    {
+      "id": "sns",
+      "votesByUnit": {
+        "ve1": null,
+        "ve2": null,
+        "ve3": null,
+        "ve4": null
+      }
+    },
+    {
+      "id": "resnica",
+      "votesByUnit": {
+        "ve1": null,
+        "ve2": null,
+        "ve3": null,
+        "ve4": null
+      }
     }
   ]
 }

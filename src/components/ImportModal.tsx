@@ -153,7 +153,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                   Kako uvoziti podatke s portala DVK (volitve.dvk-rs.si/lv2026)
                 </p>
                 <p>
-                  Državna volilna komisija spletno stran ščiti z zaščito Cloudflare, zato neposreden strežniški zajem ni dovoljen. Odprite uradno stran DVK, označite in kopirajte vrstice z rezultati ali udeležbo za Občino Slovenska Bistrica ter jih prilepite spodaj.
+                  Neposreden klic brskalnika na uradni vir DVK omejuje pravilo CORS (dovoljen je le lokalni izvor DVK), zato podatke periodično zajema GitHub Actions v datoteko <code className="font-mono">public/lv2026-data.json</code>. Če želite rezultate vnesti takoj ročno, jih kopirajte s portala DVK in prilepite spodaj.
                 </p>
                 <a
                   href={DVK_LV2026_URL}

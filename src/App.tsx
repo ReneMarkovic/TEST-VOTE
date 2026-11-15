@@ -91,8 +91,11 @@ export default function App() {
     }
   }, [lv2026Data]);
 
-  const handleRefreshData = useCallback(async () => {
-    setIsRefreshing(true);
+  const handleRefreshData = useCallback(async (options?: { silent?: boolean }) => {
+    const silent = Boolean(options?.silent);
+    if (!silent) {
+      setIsRefreshing(true);
+    }
     const nowTime = new Date().toLocaleTimeString('sl-SI', {
       hour: '2-digit',
       minute: '2-digit',
@@ -143,6 +146,13 @@ export default function App() {
           return {
             ...prev,
             stage: remote.stage ?? prev.stage,
+            hasResults:
+              typeof remote.hasResults === 'boolean'
+                ? remote.hasResults
+                : prev.hasResults,
+            casUdelezba: remote.casUdelezba ?? prev.casUdelezba,
+            dvkUpdatedAt: remote.dvkUpdatedAt ?? prev.dvkUpdatedAt,
+            dvkVotesCounted: remote.dvkVotesCounted ?? prev.dvkVotesCounted,
             lastUpdatedLabel: remote.lastUpdatedLabel ?? prev.lastUpdatedLabel,
             eligibleVotersMunicipality:
               remote.eligibleVotersMunicipality ?? prev.eligibleVotersMunicipality,
@@ -152,22 +162,39 @@ export default function App() {
             ksCandidates: mergedKs,
           };
         });
+        if (!silent) {
+          const waitingResults =
+            remote.hasResults === false || remote.stage === 'v_teku';
+          const dvkMeta = remote.dvkUpdatedAt
+            ? ` (vir DVK: ${remote.dvkUpdatedAt})`
+            : '';
+          setSyncNotice(
+            waitingResults
+              ? `Preverjeno ob ${nowTime}. Podatki iz lv2026-data.json so osveženi${dvkMeta}. Rezultati za župana in občinski svet še niso objavljeni (čakanje na rezultate). Ker DVK brskalnikom omejuje neposreden dostop s pravilom CORS, datoteko lv2026-data.json samodejno posodablja GitHub Actions.`
+              : `Preverjeno ob ${nowTime}. Podatki iz lv2026-data.json so uspešno posodobljeni${dvkMeta}.`
+          );
+        }
+      } else if (!silent) {
         setSyncNotice(
-          `Preverjeno ob ${nowTime}. Podatki aplikacije so osveženi iz vira lv2026-data.json. Neposreden samodejni zajem z volitve.dvk-rs.si ni mogoč zaradi zaščite Cloudflare/CORS — sveže številke DVK lahko kadarkoli prilepite prek gumba »Vnos / Uvoz DVK«.`
-        );
-      } else {
-        setSyncNotice(
-          `Preverjeno ob ${nowTime}: oddaljeni JSON vir ni dosegljiv. Za vnos najnovejših rezultatov z DVK uporabite »Vnos / Uvoz DVK«.`
+          `Preverjeno ob ${nowTime}: datoteka lv2026-data.json trenutno ni dosegljiva. Za takojšen vnos lahko uporabite »Vnos / Uvoz DVK«.`
         );
       }
     } catch {
-      setSyncNotice(
-        `Preverjeno ob ${nowTime}: samodejni prenos ni uspel. Uporabite »Vnos / Uvoz DVK« za takojšen uvoz podatkov.`
-      );
+      if (!silent) {
+        setSyncNotice(
+          `Preverjeno ob ${nowTime}: branje datoteke lv2026-data.json ni uspelo. Za takojšen vnos lahko uporabite »Vnos / Uvoz DVK«.`
+        );
+      }
     } finally {
-      setIsRefreshing(false);
+      if (!silent) {
+        setIsRefreshing(false);
+      }
     }
   }, []);
+
+  useEffect(() => {
+    void handleRefreshData({ silent: true });
+  }, [handleRefreshData]);
 
   useEffect(() => {
     if (!autoRefresh) return;
