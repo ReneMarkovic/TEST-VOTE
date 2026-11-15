@@ -4,11 +4,11 @@
   "stage": "delni",
   "hasResults": true,
   "casUdelezba": "19:00",
-  "dvkUpdatedAt": "15. 11. 2026 ob 22:20",
-  "dvkVotesCounted": 1865,
-  "dvkCountedPct": 26.07,
-  "invalidBallotsMayor": 26,
-  "lastUpdatedLabel": "Delni izidi DVK (preštetih 26,07 % · 1865 glasov · osveženo 22:20)",
+  "dvkUpdatedAt": "15. 11. 2026 ob 22:30",
+  "dvkVotesCounted": 2534,
+  "dvkCountedPct": 34.73,
+  "invalidBallotsMayor": 37,
+  "lastUpdatedLabel": "Delni izidi DVK (preštetih 34,73 % · 2534 glasov · osveženo 22:30)",
   "eligibleVotersMunicipality": 20336,
   "turnout": [
     {
@@ -34,10 +34,10 @@
     {
       "label": "Končna udeležba ob 19:00",
       "time": "19:00",
-      "municipalityPct": 35.18,
+      "municipalityPct": 35.88,
       "pragerskoPct": null,
-      "sloveniaPct": 47.34,
-      "municipalityVoters": 7155,
+      "sloveniaPct": 47.92,
+      "municipalityVoters": 7296,
       "municipalityEligible": 20336,
       "certificatesCount": null
     }
@@ -46,122 +46,122 @@
     {
       "id": "zagar",
       "name": "dr. Ivan Žagar",
-      "votes": 1152
+      "votes": 1512
     },
     {
       "id": "cvahte",
       "name": "dr. Peter Cvahte",
-      "votes": 242
+      "votes": 367
     },
     {
       "id": "gosnik",
       "name": "Edita Gošnik",
-      "votes": 327
+      "votes": 460
     },
     {
       "id": "spaninger",
       "name": "Matej Španinger",
-      "votes": 118
+      "votes": 158
     }
   ],
   "councilLists": [
     {
       "id": "sls",
       "votesByUnit": {
-        "ve1": 94,
-        "ve2": 95,
+        "ve1": 117,
+        "ve2": 168,
         "ve3": 221,
-        "ve4": 56
+        "ve4": 105
       },
-      "dvkTotalVotes": 466,
+      "dvkTotalVotes": 611,
       "knownSeatsOverride": null
     },
     {
       "id": "sds",
       "votesByUnit": {
-        "ve1": 201,
-        "ve2": 61,
+        "ve1": 233,
+        "ve2": 125,
         "ve3": 274,
-        "ve4": 84
+        "ve4": 139
       },
-      "dvkTotalVotes": 620,
+      "dvkTotalVotes": 771,
       "knownSeatsOverride": null
     },
     {
       "id": "svoboda",
       "votesByUnit": {
-        "ve1": 89,
-        "ve2": 97,
+        "ve1": 97,
+        "ve2": 128,
         "ve3": 53,
-        "ve4": 22
+        "ve4": 87
       },
-      "dvkTotalVotes": 261,
+      "dvkTotalVotes": 365,
       "knownSeatsOverride": null
     },
     {
       "id": "sd",
       "votesByUnit": {
-        "ve1": 58,
-        "ve2": 18,
+        "ve1": 64,
+        "ve2": 29,
         "ve3": 65,
-        "ve4": 9
+        "ve4": 72
       },
-      "dvkTotalVotes": 150,
+      "dvkTotalVotes": 230,
       "knownSeatsOverride": null
     },
     {
       "id": "nsi-fokus",
       "votesByUnit": {
-        "ve1": 66,
-        "ve2": 26,
+        "ve1": 147,
+        "ve2": 47,
         "ve3": 61,
-        "ve4": 14
+        "ve4": 24
       },
-      "dvkTotalVotes": 167,
+      "dvkTotalVotes": 279,
       "knownSeatsOverride": null
     },
     {
       "id": "sg",
       "votesByUnit": {
         "ve1": 7,
-        "ve2": 5,
+        "ve2": 7,
         "ve3": 19,
-        "ve4": 1
+        "ve4": 2
       },
-      "dvkTotalVotes": 32,
+      "dvkTotalVotes": 35,
       "knownSeatsOverride": null
     },
     {
       "id": "demokrati",
       "votesByUnit": {
         "ve1": 5,
-        "ve2": 5,
+        "ve2": 6,
         "ve3": 6,
-        "ve4": 0
+        "ve4": 9
       },
-      "dvkTotalVotes": 16,
+      "dvkTotalVotes": 26,
       "knownSeatsOverride": null
     },
     {
       "id": "sns",
       "votesByUnit": {
-        "ve1": 5,
-        "ve2": 17,
+        "ve1": 11,
+        "ve2": 30,
         "ve3": 63,
-        "ve4": 9
+        "ve4": 22
       },
-      "dvkTotalVotes": 94,
+      "dvkTotalVotes": 126,
       "knownSeatsOverride": null
     },
     {
       "id": "resnica",
       "votesByUnit": {
-        "ve1": 5,
+        "ve1": 7,
         "ve2": null,
         "ve3": null,
         "ve4": null
       },
-      "dvkTotalVotes": 5,
+      "dvkTotalVotes": 7,
       "knownSeatsOverride": null
     }
   ]
