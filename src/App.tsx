@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { RefreshCw } from 'lucide-react';
 import { Header } from './components/Header';
 import { TurnoutSection } from './components/TurnoutSection';
 import { MayoralAndCouncilSection } from './components/MayoralAndCouncilSection';
@@ -35,9 +36,31 @@ export default function App() {
         const missingInitial = INITIAL_LV2026_DATA.councilCandidates.filter(
           (c) => !existingIds.has(c.id)
         );
+        const existingTurnout = Array.isArray(parsed.turnout) ? parsed.turnout : [];
+        const mergedTurnout = INITIAL_LV2026_DATA.turnout.map((initCp, idx) => {
+          const savedCp = existingTurnout[idx];
+          if (!savedCp) return initCp;
+          return {
+            ...initCp,
+            ...savedCp,
+            municipalityPct:
+              savedCp.municipalityPct === 11.6 && initCp.time === '11:00'
+                ? initCp.municipalityPct
+                : (savedCp.municipalityPct ?? initCp.municipalityPct),
+            sloveniaPct: savedCp.sloveniaPct ?? initCp.sloveniaPct,
+            municipalityVoters:
+              savedCp.municipalityVoters ?? initCp.municipalityVoters,
+            municipalityEligible:
+              savedCp.municipalityEligible ?? initCp.municipalityEligible,
+          };
+        });
         return {
           ...INITIAL_LV2026_DATA,
           ...parsed,
+          eligibleVotersMunicipality:
+            parsed.eligibleVotersMunicipality ??
+            INITIAL_LV2026_DATA.eligibleVotersMunicipality,
+          turnout: mergedTurnout,
           councilCandidates: [...existingCandidates, ...missingInitial],
         };
       }
@@ -49,6 +72,9 @@ export default function App() {
 
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [importModalTab, setImportModalTab] = useState<ImportModalTab>('paste');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [syncNotice, setSyncNotice] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -57,6 +83,90 @@ export default function App() {
       // Ignore storage errors
     }
   }, [lv2026Data]);
+
+  const handleRefreshData = useCallback(async () => {
+    setIsRefreshing(true);
+    const nowTime = new Date().toLocaleTimeString('sl-SI', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+    try {
+      const feedUrl = `${import.meta.env.BASE_URL}lv2026-data.json?t=${Date.now()}`;
+      const res = await fetch(feedUrl, { cache: 'no-store' });
+      if (res.ok) {
+        const remote = (await res.json()) as Partial<ElectionDataset>;
+        setLv2026Data((prev) => {
+          const mergedTurnout = prev.turnout.map((cp, idx) => {
+            const rCp = remote.turnout?.[idx];
+            if (!rCp) return cp;
+            return {
+              ...cp,
+              municipalityPct: rCp.municipalityPct ?? cp.municipalityPct,
+              pragerskoPct: rCp.pragerskoPct ?? cp.pragerskoPct,
+              sloveniaPct: rCp.sloveniaPct ?? cp.sloveniaPct,
+              municipalityVoters: rCp.municipalityVoters ?? cp.municipalityVoters,
+              municipalityEligible:
+                rCp.municipalityEligible ?? cp.municipalityEligible,
+            };
+          });
+          const mergedMayor = prev.mayoralCandidates.map((mc) => {
+            const rMc = remote.mayoralCandidates?.find((x) => x.id === mc.id);
+            return rMc ? { ...mc, votes: rMc.votes ?? mc.votes } : mc;
+          });
+          const mergedCouncil = prev.councilLists.map((cl) => {
+            const rCl = remote.councilLists?.find((x) => x.id === cl.id);
+            if (!rCl) return cl;
+            return {
+              ...cl,
+              votesByUnit: {
+                ve1: rCl.votesByUnit?.ve1 ?? cl.votesByUnit.ve1,
+                ve2: rCl.votesByUnit?.ve2 ?? cl.votesByUnit.ve2,
+                ve3: rCl.votesByUnit?.ve3 ?? cl.votesByUnit.ve3,
+                ve4: rCl.votesByUnit?.ve4 ?? cl.votesByUnit.ve4,
+              },
+            };
+          });
+          const mergedKs = prev.ksCandidates.map((kc) => {
+            const rKc = remote.ksCandidates?.find((x) => x.id === kc.id);
+            return rKc ? { ...kc, votes: rKc.votes ?? kc.votes } : kc;
+          });
+          return {
+            ...prev,
+            stage: remote.stage ?? prev.stage,
+            lastUpdatedLabel: remote.lastUpdatedLabel ?? prev.lastUpdatedLabel,
+            eligibleVotersMunicipality:
+              remote.eligibleVotersMunicipality ?? prev.eligibleVotersMunicipality,
+            turnout: mergedTurnout,
+            mayoralCandidates: mergedMayor,
+            councilLists: mergedCouncil,
+            ksCandidates: mergedKs,
+          };
+        });
+        setSyncNotice(
+          `Preverjeno ob ${nowTime}. Podatki aplikacije so osveženi iz vira lv2026-data.json. Neposreden samodejni zajem z volitve.dvk-rs.si ni mogoč zaradi zaščite Cloudflare/CORS — sveže številke DVK lahko kadarkoli prilepite prek gumba »Vnos / Uvoz DVK«.`
+        );
+      } else {
+        setSyncNotice(
+          `Preverjeno ob ${nowTime}: oddaljeni JSON vir ni dosegljiv. Za vnos najnovejših rezultatov z DVK uporabite »Vnos / Uvoz DVK«.`
+        );
+      }
+    } catch {
+      setSyncNotice(
+        `Preverjeno ob ${nowTime}: samodejni prenos ni uspel. Uporabite »Vnos / Uvoz DVK« za takojšen uvoz podatkov.`
+      );
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const timer = window.setInterval(() => {
+      void handleRefreshData();
+    }, 60000);
+    return () => window.clearInterval(timer);
+  }, [autoRefresh, handleRefreshData]);
 
   const activeDataset = mode === 'lv2026' ? lv2026Data : HISTORICAL_LV2022_DATA;
 
@@ -208,6 +318,32 @@ export default function App() {
                   Referenca LV 2022
                 </button>
               </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => void handleRefreshData()}
+                  disabled={isRefreshing}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-[#0F4C81] hover:bg-[#0c3d68] disabled:opacity-60 rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                >
+                  <RefreshCw
+                    className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`}
+                    aria-hidden="true"
+                  />
+                  <span>{isRefreshing ? 'Posodabljanje...' : 'Posodobi podatke'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAutoRefresh((prev) => !prev)}
+                  aria-pressed={autoRefresh}
+                  className={`px-3 py-2 text-xs font-medium rounded-lg border transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                    autoRefresh
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {autoRefresh ? 'Samodejno: vklopljeno (60 s)' : 'Samodejno (60 s)'}
+                </button>
+              </div>
               <a
                 href={DVK_LV2026_URL}
                 target="_blank"
@@ -218,6 +354,28 @@ export default function App() {
               </a>
             </div>
           </div>
+
+          {syncNotice && (
+            <div className="px-4 py-3 bg-white border border-slate-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-700 no-print">
+              <span>{syncNotice}</span>
+              <div className="flex items-center gap-3 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => openModal('paste')}
+                  className="font-medium text-[#0F4C81] hover:underline whitespace-nowrap cursor-pointer"
+                >
+                  Prilepi iz DVK
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSyncNotice(null)}
+                  className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                >
+                  Zapri
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* 4-column KPI strip */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

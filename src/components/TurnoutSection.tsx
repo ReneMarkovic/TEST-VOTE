@@ -33,7 +33,7 @@ export const TurnoutSection: React.FC<TurnoutSectionProps> = ({
           </h2>
           <p className="text-sm text-slate-600 max-w-2xl">
             {mode === 'lv2026'
-              ? 'Občina Slovenska Bistrica je ob 11. uri zabeležila 11,60-odstotno udeležbo (slovensko povprečje 12,85 %). Podatki ob 16:00 in končni podatki ob 19:00 se dopolnijo ob objavi DVK.'
+              ? 'Občina Slovenska Bistrica je do 11. ure zabeležila 11,56 % udeležbo (2.351 od 20.335 volilnih upravičencev; Slovenija 12,85 %). Do 16. ure je bila udeležba v Sloveniji 36,77 %.'
               : 'Uradna končna volilna udeležba na lokalnih volitvah 20. novembra 2022 za Občino Slovenska Bistrica in državno povprečje.'}
           </p>
         </div>
@@ -55,7 +55,7 @@ export const TurnoutSection: React.FC<TurnoutSectionProps> = ({
               className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-[#0F4C81] bg-sky-50 hover:bg-sky-100 rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               <PencilLine className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Posodobi udeležbo</span>
+              <span>Vnesi udeležbo</span>
             </button>
           )}
         </div>
@@ -71,16 +71,22 @@ export const TurnoutSection: React.FC<TurnoutSectionProps> = ({
           const rows = [
             {
               label: 'Občina Slovenska Bistrica',
+              sub:
+                checkpoint.municipalityVoters && checkpoint.municipalityEligible
+                  ? `${checkpoint.municipalityVoters.toLocaleString('sl-SI')} / ${checkpoint.municipalityEligible.toLocaleString('sl-SI')} volivcev`
+                  : null,
               pct: checkpoint.municipalityPct,
               barClass: 'bg-[#0F4C81]',
             },
             {
               label: 'KS Pragersko–Gaj (volišče)',
+              sub: null,
               pct: checkpoint.pragerskoPct,
               barClass: 'bg-emerald-700',
             },
             {
               label: 'Slovenija (povprečje)',
+              sub: null,
               pct: checkpoint.sloveniaPct,
               barClass: 'bg-slate-400',
             },
@@ -107,9 +113,16 @@ export const TurnoutSection: React.FC<TurnoutSectionProps> = ({
                   return (
                     <div key={row.label} className="space-y-1.5">
                       <div className="flex items-baseline justify-between gap-2 text-sm">
-                        <span className="text-slate-700 truncate">
-                          {row.label}
-                        </span>
+                        <div className="min-w-0">
+                          <span className="text-slate-700 truncate block">
+                            {row.label}
+                          </span>
+                          {row.sub && (
+                            <span className="font-mono text-[11px] text-slate-500 tabular-nums">
+                              {row.sub}
+                            </span>
+                          )}
+                        </div>
                         <span className="font-mono font-semibold text-slate-900 tabular-nums shrink-0">
                           {formatPct(row.pct)}
                         </span>
