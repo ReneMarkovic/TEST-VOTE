@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "sync:dvk": "node scripts/fetch-dvk-lv2026.mjs"
+    "sync:dvk": "python3 scripts/fetch_dvk_lv2026.py"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
