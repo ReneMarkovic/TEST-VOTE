@@ -1,4 +1,5 @@
 import type {
+  CouncilCandidate,
   CouncilList,
   ElectionDataset,
   ElectoralUnit,
@@ -415,9 +416,167 @@ export function parseDvkImportText(rawText: string, current: ElectionDataset): P
   };
 }
 
+export interface ComputedCouncilCandidate extends CouncilCandidate {
+  listShortName: string;
+  listColor: string;
+  unitNumber: number;
+  unitName: string;
+  listSeatsInUnit: number;
+  projectedElected: boolean;
+  electionBasis: 'preferencni' | 'vrstni_red' | 'rocno' | null;
+}
+
+export function computeCouncilCandidateOutcomes(
+  candidates: CouncilCandidate[],
+  lists: CouncilList[],
+  units: ElectoralUnit[]
+): ComputedCouncilCandidate[] {
+  const councilComputed = computeCouncilResults(lists, units);
+  const listMap = new Map(councilComputed.lists.map((l) => [l.id, l]));
+  const unitMap = new Map(units.map((u) => [u.id, u]));
+
+  const grouped = new Map<string, CouncilCandidate[]>();
+  for (const cand of candidates) {
+    const key = `${cand.listId}__${cand.unitId}`;
+    const arr = grouped.get(key) ?? [];
+    arr.push(cand);
+    grouped.set(key, arr);
+  }
+
+  const results: ComputedCouncilCandidate[] = [];
+
+  for (const [, group] of grouped.entries()) {
+    const sample = group[0];
+    const listInfo = listMap.get(sample.listId);
+    const unitInfo = unitMap.get(sample.unitId);
+    const seatsInUnit = listInfo ? listInfo.seatsByUnit[sample.unitId] ?? 0 : 0;
+
+    const hasPrefVotes = group.some(
+      (c) => typeof c.preferentialVotes === 'number' && c.preferentialVotes > 0
+    );
+
+    const ranked = [...group].sort((a, b) => {
+      if (hasPrefVotes) {
+        const va = a.preferentialVotes ?? -1;
+        const vb = b.preferentialVotes ?? -1;
+        if (vb !== va) return vb - va;
+      }
+      return a.ballotOrder - b.ballotOrder;
+    });
+
+    const electedIds = new Set<string>();
+    if (seatsInUnit > 0) {
+      for (let i = 0; i < Math.min(seatsInUnit, ranked.length); i++) {
+        electedIds.add(ranked[i].id);
+      }
+    }
+
+    for (const cand of group) {
+      const isManual = cand.manualElected === true;
+      const isProjected = isManual || electedIds.has(cand.id);
+      const basis: ComputedCouncilCandidate['electionBasis'] = isManual
+        ? 'rocno'
+        : electedIds.has(cand.id)
+          ? hasPrefVotes
+            ? 'preferencni'
+            : 'vrstni_red'
+          : null;
+
+      results.push({
+        ...cand,
+        listShortName: listInfo?.shortName ?? cand.listId,
+        listColor: listInfo?.color ?? '#64748B',
+        unitNumber: unitInfo?.number ?? 0,
+        unitName: unitInfo?.name ?? cand.unitId,
+        listSeatsInUnit: seatsInUnit,
+        projectedElected: isProjected,
+        electionBasis: basis,
+      });
+    }
+  }
+
+  results.sort((a, b) => {
+    if (a.unitNumber !== b.unitNumber) return a.unitNumber - b.unitNumber;
+    if (a.listShortName !== b.listShortName)
+      return a.listShortName.localeCompare(b.listShortName, 'sl');
+    return a.ballotOrder - b.ballotOrder;
+  });
+
+  return results;
+}
+
+export function parseCouncilCandidatesText(
+  rawText: string,
+  listId: string,
+  unitId: string,
+  startingOrder: number
+): CouncilCandidate[] {
+  const lines = rawText
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  const created: CouncilCandidate[] = [];
+  let orderCounter = startingOrder;
+
+  for (const line of lines) {
+    // Strip leading numbering like "1.", "1)", "1 -"
+    let working = line.replace(/^\d{1,2}\s*[.)-]\s*/, '').trim();
+    if (!working) continue;
+
+    // Extract birth year like "(roj. 1979)", ", roj. 1979", "(1979)"
+    let birthYear: number | undefined;
+    const yearMatch = working.match(/(?:roj\.?\s*|\()(\b19\d{2}|200\d\b)\)?/i);
+    if (yearMatch) {
+      birthYear = parseInt(yearMatch[1], 10);
+      working = working.replace(yearMatch[0], '').trim();
+    }
+
+    // Extract optional preferential votes at end like "- 142" or "142 glasov"
+    let preferentialVotes: number | null = null;
+    const prefMatch = working.match(/(?:[-–:]\s*|\s+)(\d{1,5})\s*(?:glasov|pref\.?)?$/i);
+    if (prefMatch) {
+      const maybeNum = parseInt(prefMatch[1], 10);
+      if (maybeNum >= 0 && maybeNum < 1900) {
+        preferentialVotes = maybeNum;
+        working = working.slice(0, working.length - prefMatch[0].length).trim();
+      }
+    }
+
+    // Split optional residence after comma
+    let residence: string | undefined;
+    const parts = working.split(',').map((p) => p.trim()).filter(Boolean);
+    const name = parts[0] ?? '';
+    if (parts.length > 1) {
+      residence = parts.slice(1).join(', ');
+    }
+
+    if (!name) continue;
+
+    created.push({
+      id: `cc-${listId}-${unitId}-${Date.now()}-${orderCounter}`,
+      listId,
+      unitId,
+      ballotOrder: orderCounter,
+      name: name.replace(/[,;]+$/, '').trim(),
+      birthYear,
+      residence,
+      preferentialVotes,
+    });
+    orderCounter++;
+  }
+
+  return created;
+}
+
 export function generateSummaryText(dataset: ElectionDataset): string {
   const mayor = computeMayoralResults(dataset.mayoralCandidates);
   const council = computeCouncilResults(dataset.councilLists, dataset.electoralUnits);
+  const councilCandidates = computeCouncilCandidateOutcomes(
+    dataset.councilCandidates ?? [],
+    dataset.councilLists,
+    dataset.electoralUnits
+  );
   const ks = computeKsResults(dataset.ksCandidates, dataset.ksSeatsTotal);
 
   const stageLabel =
@@ -464,6 +623,14 @@ export function generateSummaryText(dataset: ElectionDataset): string {
     for (const l of council.lists) {
       lines.push(
         `- ${l.shortName}: ${l.seatsTotal} mandatov${l.totalVotes > 0 ? ` (${formatInt(l.totalVotes)} glasov, ${formatPct(l.pct)})` : ''} · 2. VE (Pragersko–Gaj): ${l.seatsByUnit['ve2'] ?? 0} mandatov`
+      );
+    }
+    const electedCouncilors = councilCandidates.filter((c) => c.projectedElected);
+    if (electedCouncilors.length > 0) {
+      lines.push(
+        `Predvideno/označeno izvoljeni občinski svetniki (${electedCouncilors.length}): ` +
+          electedCouncilors.map((c) => `${c.name} (${c.listShortName}, ${c.unitNumber}. VE)`).join(', ') +
+          '.'
       );
     }
   } else {

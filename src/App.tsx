@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Header } from './components/Header';
 import { TurnoutSection } from './components/TurnoutSection';
 import { MayoralAndCouncilSection } from './components/MayoralAndCouncilSection';
+import { CouncilCandidatesSection } from './components/CouncilCandidatesSection';
 import { PragerskoGajSection } from './components/PragerskoGajSection';
 import { SummarySection } from './components/SummarySection';
 import { ImportModal, type ImportModalTab } from './components/ImportModal';
@@ -26,7 +27,19 @@ export default function App() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved) as ElectionDataset;
+        const parsed = JSON.parse(saved) as Partial<ElectionDataset>;
+        const existingCandidates = Array.isArray(parsed.councilCandidates)
+          ? parsed.councilCandidates
+          : [];
+        const existingIds = new Set(existingCandidates.map((c) => c.id));
+        const missingInitial = INITIAL_LV2026_DATA.councilCandidates.filter(
+          (c) => !existingIds.has(c.id)
+        );
+        return {
+          ...INITIAL_LV2026_DATA,
+          ...parsed,
+          councilCandidates: [...existingCandidates, ...missingInitial],
+        };
       }
     } catch {
       // Ignore storage errors
@@ -260,6 +273,17 @@ export default function App() {
           dataset={activeDataset}
           mode={mode}
           onEditResults={(tab) => openModal(tab)}
+        />
+
+        <CouncilCandidatesSection
+          dataset={activeDataset}
+          mode={mode}
+          onUpdateCandidates={(updated) =>
+            setLv2026Data((prev) => ({
+              ...prev,
+              councilCandidates: updated,
+            }))
+          }
         />
 
         <PragerskoGajSection

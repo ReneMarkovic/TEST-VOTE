@@ -38,16 +38,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenImport }) => {
             Župan in svet
           </a>
           <a
+            href="#kandidati-svet"
+            className="hover:text-slate-900 hover:underline underline-offset-4 transition-colors whitespace-nowrap shrink-0"
+          >
+            Kandidati OS
+          </a>
+          <a
             href="#pragersko-gaj"
             className="hover:text-slate-900 hover:underline underline-offset-4 transition-colors whitespace-nowrap shrink-0"
           >
             KS Pragersko–Gaj
-          </a>
-          <a
-            href="#povzetek"
-            className="hover:text-slate-900 hover:underline underline-offset-4 transition-colors whitespace-nowrap shrink-0"
-          >
-            Povzetek
           </a>
         </nav>
 

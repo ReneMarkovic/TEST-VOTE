@@ -43,6 +43,18 @@ export interface ElectoralUnit {
   includesPragerskoGaj?: boolean;
 }
 
+export interface CouncilCandidate {
+  id: string;
+  listId: string;
+  unitId: string;
+  ballotOrder: number;
+  name: string;
+  birthYear?: number;
+  residence?: string;
+  preferentialVotes: number | null;
+  manualElected?: boolean;
+}
+
 export interface KsCandidate {
   id: string;
   ballotNumber: number;
@@ -68,6 +80,7 @@ export interface ElectionDataset {
   mayoralCandidates: MayoralCandidate[];
   electoralUnits: ElectoralUnit[];
   councilLists: CouncilList[];
+  councilCandidates: CouncilCandidate[];
   ksSeatsTotal: number;
   ksPollingStation: {
     name: string;
