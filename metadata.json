@@ -1,0 +1,6 @@
+{
+  "name": "Lokalne volitve 2026 · Slovenska Bistrica in KS Pragersko–Gaj",
+  "description": "Pregled in povzetek izidov lokalnih volitev 2026 ter volilne udeležbe za Občino Slovenska Bistrica in Krajevno skupnost Pragersko–Gaj.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
