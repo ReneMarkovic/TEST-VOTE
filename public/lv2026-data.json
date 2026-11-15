@@ -4,11 +4,11 @@
   "stage": "delni",
   "hasResults": true,
   "casUdelezba": "19:00",
-  "dvkUpdatedAt": "15. 11. 2026 ob 21:10",
-  "dvkVotesCounted": 191,
-  "dvkCountedPct": 2.82,
-  "invalidBallotsMayor": 3,
-  "lastUpdatedLabel": "Delni izidi DVK (preštetih 2,82 % · 191 glasov · osveženo 21:10)",
+  "dvkUpdatedAt": "15. 11. 2026 ob 21:15",
+  "dvkVotesCounted": 386,
+  "dvkCountedPct": 5.65,
+  "invalidBallotsMayor": 7,
+  "lastUpdatedLabel": "Delni izidi DVK (preštetih 5,65 % · 386 glasov · osveženo 21:15)",
   "eligibleVotersMunicipality": 20336,
   "turnout": [
     {
@@ -34,10 +34,10 @@
     {
       "label": "Končna udeležba ob 19:00",
       "time": "19:00",
-      "municipalityPct": 33.33,
+      "municipalityPct": 33.6,
       "pragerskoPct": null,
-      "sloveniaPct": 43.45,
-      "municipalityVoters": 6778,
+      "sloveniaPct": 43.76,
+      "municipalityVoters": 6833,
       "municipalityEligible": 20336,
       "certificatesCount": null
     }
@@ -46,22 +46,22 @@
     {
       "id": "zagar",
       "name": "dr. Ivan Žagar",
-      "votes": 132
+      "votes": 290
     },
     {
       "id": "cvahte",
       "name": "dr. Peter Cvahte",
-      "votes": 23
+      "votes": 31
     },
     {
       "id": "gosnik",
       "name": "Edita Gošnik",
-      "votes": 28
+      "votes": 45
     },
     {
       "id": "spaninger",
       "name": "Matej Španinger",
-      "votes": 5
+      "votes": 13
     }
   ],
   "councilLists": [
@@ -70,10 +70,10 @@
       "votesByUnit": {
         "ve1": 18,
         "ve2": 0,
-        "ve3": 60,
-        "ve4": 0
+        "ve3": 75,
+        "ve4": 29
       },
-      "dvkTotalVotes": 78,
+      "dvkTotalVotes": 122,
       "knownSeatsOverride": null
     },
     {
@@ -81,10 +81,10 @@
       "votesByUnit": {
         "ve1": 19,
         "ve2": 0,
-        "ve3": 42,
-        "ve4": 0
+        "ve3": 65,
+        "ve4": 76
       },
-      "dvkTotalVotes": 61,
+      "dvkTotalVotes": 160,
       "knownSeatsOverride": null
     },
     {
@@ -92,10 +92,10 @@
       "votesByUnit": {
         "ve1": 16,
         "ve2": 0,
-        "ve3": 5,
-        "ve4": 0
+        "ve3": 6,
+        "ve4": 18
       },
-      "dvkTotalVotes": 21,
+      "dvkTotalVotes": 40,
       "knownSeatsOverride": null
     },
     {
@@ -103,10 +103,10 @@
       "votesByUnit": {
         "ve1": 4,
         "ve2": 0,
-        "ve3": 6,
-        "ve4": 0
+        "ve3": 8,
+        "ve4": 3
       },
-      "dvkTotalVotes": 10,
+      "dvkTotalVotes": 15,
       "knownSeatsOverride": null
     },
     {
@@ -115,9 +115,9 @@
         "ve1": 8,
         "ve2": 0,
         "ve3": 9,
-        "ve4": 0
+        "ve4": 6
       },
-      "dvkTotalVotes": 17,
+      "dvkTotalVotes": 23,
       "knownSeatsOverride": null
     },
     {
@@ -126,9 +126,9 @@
         "ve1": 0,
         "ve2": 0,
         "ve3": 1,
-        "ve4": 0
+        "ve4": 1
       },
-      "dvkTotalVotes": 1,
+      "dvkTotalVotes": 2,
       "knownSeatsOverride": null
     },
     {
@@ -147,10 +147,10 @@
       "votesByUnit": {
         "ve1": 1,
         "ve2": 0,
-        "ve3": 0,
-        "ve4": 0
+        "ve3": 9,
+        "ve4": 8
       },
-      "dvkTotalVotes": 1,
+      "dvkTotalVotes": 18,
       "knownSeatsOverride": null
     },
     {
