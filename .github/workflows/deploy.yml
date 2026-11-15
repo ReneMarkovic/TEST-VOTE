@@ -56,6 +56,8 @@ jobs:
           fi
 
       - name: Build site
+        env:
+          VITE_LIVE_USERS_ENDPOINT: ${{ vars.VITE_LIVE_USERS_ENDPOINT }}
         run: npm run build
 
       - uses: actions/configure-pages@v5
