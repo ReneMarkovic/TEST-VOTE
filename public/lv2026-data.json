@@ -4,11 +4,11 @@
   "stage": "delni",
   "hasResults": true,
   "casUdelezba": "19:00",
-  "dvkUpdatedAt": "15. 11. 2026 ob 22:15",
+  "dvkUpdatedAt": "15. 11. 2026 ob 22:20",
   "dvkVotesCounted": 1865,
   "dvkCountedPct": 26.07,
   "invalidBallotsMayor": 26,
-  "lastUpdatedLabel": "Delni izidi DVK (preštetih 26,07 % · 1865 glasov · osveženo 22:15)",
+  "lastUpdatedLabel": "Delni izidi DVK (preštetih 26,07 % · 1865 glasov · osveženo 22:20)",
   "eligibleVotersMunicipality": 20336,
   "turnout": [
     {
@@ -36,7 +36,7 @@
       "time": "19:00",
       "municipalityPct": 35.18,
       "pragerskoPct": null,
-      "sloveniaPct": 47.03,
+      "sloveniaPct": 47.34,
       "municipalityVoters": 7155,
       "municipalityEligible": 20336,
       "certificatesCount": null
@@ -70,10 +70,10 @@
       "votesByUnit": {
         "ve1": 94,
         "ve2": 95,
-        "ve3": 190,
+        "ve3": 221,
         "ve4": 56
       },
-      "dvkTotalVotes": 435,
+      "dvkTotalVotes": 466,
       "knownSeatsOverride": null
     },
     {
@@ -81,10 +81,10 @@
       "votesByUnit": {
         "ve1": 201,
         "ve2": 61,
-        "ve3": 253,
+        "ve3": 274,
         "ve4": 84
       },
-      "dvkTotalVotes": 599,
+      "dvkTotalVotes": 620,
       "knownSeatsOverride": null
     },
     {
@@ -103,10 +103,10 @@
       "votesByUnit": {
         "ve1": 58,
         "ve2": 18,
-        "ve3": 64,
+        "ve3": 65,
         "ve4": 9
       },
-      "dvkTotalVotes": 149,
+      "dvkTotalVotes": 150,
       "knownSeatsOverride": null
     },
     {
@@ -114,10 +114,10 @@
       "votesByUnit": {
         "ve1": 66,
         "ve2": 26,
-        "ve3": 53,
+        "ve3": 61,
         "ve4": 14
       },
-      "dvkTotalVotes": 159,
+      "dvkTotalVotes": 167,
       "knownSeatsOverride": null
     },
     {
@@ -136,10 +136,10 @@
       "votesByUnit": {
         "ve1": 5,
         "ve2": 5,
-        "ve3": 5,
+        "ve3": 6,
         "ve4": 0
       },
-      "dvkTotalVotes": 15,
+      "dvkTotalVotes": 16,
       "knownSeatsOverride": null
     },
     {
