@@ -2,8 +2,8 @@
   "year": 2026,
   "dateLabel": "15. november 2026",
   "stage": "v_teku",
-  "lastUpdatedLabel": "Udeležba ob 11:00 (SB 11,56 %) in 16:00 (SI 36,77 %) · Volišča odprta do 19:00",
-  "eligibleVotersMunicipality": 20335,
+  "lastUpdatedLabel": "Udeležba ob 16:00: SB 33,02 % · SI 36,77 % (osveženo DVK 17:00)",
+  "eligibleVotersMunicipality": 20336,
   "turnout": [
     {
       "label": "Udeležba ob 11:00",
@@ -17,9 +17,12 @@
     {
       "label": "Udeležba ob 16:00",
       "time": "16:00",
-      "municipalityPct": null,
+      "municipalityPct": 33.02,
       "pragerskoPct": null,
-      "sloveniaPct": 36.77
+      "sloveniaPct": 36.77,
+      "municipalityVoters": 6715,
+      "municipalityEligible": 20336,
+      "certificatesCount": 3
     },
     {
       "label": "Končna udeležba ob 19:00",

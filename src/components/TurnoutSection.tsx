@@ -15,7 +15,7 @@ export const TurnoutSection: React.FC<TurnoutSectionProps> = ({
   mode,
   onEditTurnout,
 }) => {
-  const baseline2022Municipality = 42.8;
+  const baseline2022Municipality = 43.31;
   const baseline2022Slovenia = 47.59;
 
   return (
@@ -33,8 +33,8 @@ export const TurnoutSection: React.FC<TurnoutSectionProps> = ({
           </h2>
           <p className="text-sm text-slate-600 max-w-2xl">
             {mode === 'lv2026'
-              ? 'Občina Slovenska Bistrica je do 11. ure zabeležila 11,56 % udeležbo (2.351 od 20.335 volilnih upravičencev; Slovenija 12,85 %). Do 16. ure je bila udeležba v Sloveniji 36,77 %.'
-              : 'Uradna končna volilna udeležba na lokalnih volitvah 20. novembra 2022 za Občino Slovenska Bistrica in državno povprečje.'}
+              ? 'Občina Slovenska Bistrica je do 16. ure zabeležila 33,02 % udeležbo (6.715 od 20.336 volilnih upravičencev, 3 s potrdilom; Slovenija 36,77 %). Ob 11. uri je bila udeležba 11,56 % (2.351 volivcev).'
+              : 'Uradna končna volilna udeležba na lokalnih volitvah 20. novembra 2022 (1. krog) za Občino Slovenska Bistrica in državno povprečje.'}
           </p>
         </div>
 
@@ -73,7 +73,11 @@ export const TurnoutSection: React.FC<TurnoutSectionProps> = ({
               label: 'Občina Slovenska Bistrica',
               sub:
                 checkpoint.municipalityVoters && checkpoint.municipalityEligible
-                  ? `${checkpoint.municipalityVoters.toLocaleString('sl-SI')} / ${checkpoint.municipalityEligible.toLocaleString('sl-SI')} volivcev`
+                  ? `${checkpoint.municipalityVoters.toLocaleString('sl-SI')} / ${checkpoint.municipalityEligible.toLocaleString('sl-SI')} volivcev${
+                      checkpoint.certificatesCount
+                        ? ` · ${checkpoint.certificatesCount} s potrdilom`
+                        : ''
+                    }`
                   : null,
               pct: checkpoint.municipalityPct,
               barClass: 'bg-[#0F4C81]',

@@ -52,14 +52,21 @@ export default function App() {
               savedCp.municipalityVoters ?? initCp.municipalityVoters,
             municipalityEligible:
               savedCp.municipalityEligible ?? initCp.municipalityEligible,
+            certificatesCount:
+              savedCp.certificatesCount ?? initCp.certificatesCount,
           };
         });
         return {
           ...INITIAL_LV2026_DATA,
           ...parsed,
+          lastUpdatedLabel:
+            parsed.stage === 'v_teku' || !parsed.stage
+              ? INITIAL_LV2026_DATA.lastUpdatedLabel
+              : (parsed.lastUpdatedLabel ?? INITIAL_LV2026_DATA.lastUpdatedLabel),
           eligibleVotersMunicipality:
+            INITIAL_LV2026_DATA.eligibleVotersMunicipality ??
             parsed.eligibleVotersMunicipality ??
-            INITIAL_LV2026_DATA.eligibleVotersMunicipality,
+            null,
           turnout: mergedTurnout,
           councilCandidates: [...existingCandidates, ...missingInitial],
         };
@@ -108,6 +115,8 @@ export default function App() {
               municipalityVoters: rCp.municipalityVoters ?? cp.municipalityVoters,
               municipalityEligible:
                 rCp.municipalityEligible ?? cp.municipalityEligible,
+              certificatesCount:
+                rCp.certificatesCount ?? cp.certificatesCount,
             };
           });
           const mergedMayor = prev.mayoralCandidates.map((mc) => {

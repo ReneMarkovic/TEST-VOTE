@@ -10,6 +10,7 @@ export interface TurnoutCheckpoint {
   sloveniaPct: number | null;
   municipalityVoters?: number | null;
   municipalityEligible?: number | null;
+  certificatesCount?: number | null;
   pragerskoVoters?: number | null;
   pragerskoEligible?: number | null;
 }
