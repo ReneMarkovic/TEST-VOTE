@@ -4,11 +4,11 @@
   "stage": "delni",
   "hasResults": true,
   "casUdelezba": "19:00",
-  "dvkUpdatedAt": "15. 11. 2026 ob 21:55",
-  "dvkVotesCounted": 1224,
-  "dvkCountedPct": 17.46,
-  "invalidBallotsMayor": 19,
-  "lastUpdatedLabel": "Delni izidi DVK (preštetih 17,46 % · 1224 glasov · osveženo 21:55)",
+  "dvkUpdatedAt": "15. 11. 2026 ob 22:05",
+  "dvkVotesCounted": 1505,
+  "dvkCountedPct": 21.26,
+  "invalidBallotsMayor": 22,
+  "lastUpdatedLabel": "Delni izidi DVK (preštetih 21,26 % · 1505 glasov · osveženo 22:05)",
   "eligibleVotersMunicipality": 20336,
   "turnout": [
     {
@@ -34,10 +34,10 @@
     {
       "label": "Končna udeležba ob 19:00",
       "time": "19:00",
-      "municipalityPct": 34.48,
+      "municipalityPct": 34.81,
       "pragerskoPct": null,
-      "sloveniaPct": 46.06,
-      "municipalityVoters": 7011,
+      "sloveniaPct": 46.56,
+      "municipalityVoters": 7079,
       "municipalityEligible": 20336,
       "certificatesCount": null
     }
@@ -46,111 +46,111 @@
     {
       "id": "zagar",
       "name": "dr. Ivan Žagar",
-      "votes": 780
+      "votes": 930
     },
     {
       "id": "cvahte",
       "name": "dr. Peter Cvahte",
-      "votes": 156
+      "votes": 198
     },
     {
       "id": "gosnik",
       "name": "Edita Gošnik",
-      "votes": 200
+      "votes": 259
     },
     {
       "id": "spaninger",
       "name": "Matej Španinger",
-      "votes": 69
+      "votes": 96
     }
   ],
   "councilLists": [
     {
       "id": "sls",
       "votesByUnit": {
-        "ve1": 51,
-        "ve2": 27,
-        "ve3": 159,
+        "ve1": 64,
+        "ve2": 69,
+        "ve3": 181,
         "ve4": 56
       },
-      "dvkTotalVotes": 293,
+      "dvkTotalVotes": 370,
       "knownSeatsOverride": null
     },
     {
       "id": "sds",
       "votesByUnit": {
-        "ve1": 113,
-        "ve2": 30,
-        "ve3": 222,
+        "ve1": 169,
+        "ve2": 34,
+        "ve3": 235,
         "ve4": 84
       },
-      "dvkTotalVotes": 449,
+      "dvkTotalVotes": 522,
       "knownSeatsOverride": null
     },
     {
       "id": "svoboda",
       "votesByUnit": {
-        "ve1": 48,
-        "ve2": 46,
-        "ve3": 37,
+        "ve1": 62,
+        "ve2": 65,
+        "ve3": 46,
         "ve4": 22
       },
-      "dvkTotalVotes": 153,
+      "dvkTotalVotes": 195,
       "knownSeatsOverride": null
     },
     {
       "id": "sd",
       "votesByUnit": {
-        "ve1": 31,
-        "ve2": 6,
-        "ve3": 53,
+        "ve1": 47,
+        "ve2": 10,
+        "ve3": 57,
         "ve4": 9
       },
-      "dvkTotalVotes": 99,
+      "dvkTotalVotes": 123,
       "knownSeatsOverride": null
     },
     {
       "id": "nsi-fokus",
       "votesByUnit": {
-        "ve1": 16,
-        "ve2": 20,
-        "ve3": 32,
+        "ve1": 33,
+        "ve2": 25,
+        "ve3": 48,
         "ve4": 14
       },
-      "dvkTotalVotes": 82,
+      "dvkTotalVotes": 120,
       "knownSeatsOverride": null
     },
     {
       "id": "sg",
       "votesByUnit": {
-        "ve1": 2,
+        "ve1": 6,
         "ve2": 4,
-        "ve3": 14,
+        "ve3": 16,
         "ve4": 1
       },
-      "dvkTotalVotes": 21,
+      "dvkTotalVotes": 27,
       "knownSeatsOverride": null
     },
     {
       "id": "demokrati",
       "votesByUnit": {
-        "ve1": 4,
-        "ve2": 2,
+        "ve1": 5,
+        "ve2": 3,
         "ve3": 4,
         "ve4": 0
       },
-      "dvkTotalVotes": 10,
+      "dvkTotalVotes": 12,
       "knownSeatsOverride": null
     },
     {
       "id": "sns",
       "votesByUnit": {
-        "ve1": 3,
-        "ve2": 5,
-        "ve3": 59,
+        "ve1": 4,
+        "ve2": 12,
+        "ve3": 61,
         "ve4": 9
       },
-      "dvkTotalVotes": 76,
+      "dvkTotalVotes": 86,
       "knownSeatsOverride": null
     },
     {
