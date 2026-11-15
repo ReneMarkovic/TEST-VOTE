@@ -1,0 +1,15 @@
+name = "test-vote-live-users"
+main = "worker.js"
+compatibility_date = "2026-11-15"
+
+[[durable_objects.bindings]]
+name = "LIVE_USERS"
+class_name = "LiveUsersCounter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["LiveUsersCounter"]
+
+[vars]
+# Set this to the deployed GitHub Pages origin, without a trailing slash.
+ALLOWED_ORIGIN = "https://renemarkovic.github.io"
