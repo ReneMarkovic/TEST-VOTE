@@ -4,11 +4,11 @@
   "stage": "delni",
   "hasResults": true,
   "casUdelezba": "19:00",
-  "dvkUpdatedAt": "15. 11. 2026 ob 21:50",
-  "dvkVotesCounted": 1195,
-  "dvkCountedPct": 17.05,
+  "dvkUpdatedAt": "15. 11. 2026 ob 21:55",
+  "dvkVotesCounted": 1224,
+  "dvkCountedPct": 17.46,
   "invalidBallotsMayor": 19,
-  "lastUpdatedLabel": "Delni izidi DVK (preštetih 17,05 % · 1195 glasov · osveženo 21:50)",
+  "lastUpdatedLabel": "Delni izidi DVK (preštetih 17,46 % · 1224 glasov · osveženo 21:55)",
   "eligibleVotersMunicipality": 20336,
   "turnout": [
     {
@@ -34,10 +34,10 @@
     {
       "label": "Končna udeležba ob 19:00",
       "time": "19:00",
-      "municipalityPct": 34.46,
+      "municipalityPct": 34.48,
       "pragerskoPct": null,
-      "sloveniaPct": 46.19,
-      "municipalityVoters": 7008,
+      "sloveniaPct": 46.06,
+      "municipalityVoters": 7011,
       "municipalityEligible": 20336,
       "certificatesCount": null
     }
@@ -46,7 +46,7 @@
     {
       "id": "zagar",
       "name": "dr. Ivan Žagar",
-      "votes": 752
+      "votes": 780
     },
     {
       "id": "cvahte",
@@ -56,7 +56,7 @@
     {
       "id": "gosnik",
       "name": "Edita Gošnik",
-      "votes": 199
+      "votes": 200
     },
     {
       "id": "spaninger",
@@ -70,10 +70,10 @@
       "votesByUnit": {
         "ve1": 51,
         "ve2": 27,
-        "ve3": 155,
+        "ve3": 159,
         "ve4": 56
       },
-      "dvkTotalVotes": 289,
+      "dvkTotalVotes": 293,
       "knownSeatsOverride": null
     },
     {
@@ -81,10 +81,10 @@
       "votesByUnit": {
         "ve1": 113,
         "ve2": 30,
-        "ve3": 207,
+        "ve3": 222,
         "ve4": 84
       },
-      "dvkTotalVotes": 434,
+      "dvkTotalVotes": 449,
       "knownSeatsOverride": null
     },
     {
@@ -103,10 +103,10 @@
       "votesByUnit": {
         "ve1": 31,
         "ve2": 6,
-        "ve3": 52,
+        "ve3": 53,
         "ve4": 9
       },
-      "dvkTotalVotes": 98,
+      "dvkTotalVotes": 99,
       "knownSeatsOverride": null
     },
     {
@@ -147,10 +147,10 @@
       "votesByUnit": {
         "ve1": 3,
         "ve2": 5,
-        "ve3": 52,
+        "ve3": 59,
         "ve4": 9
       },
-      "dvkTotalVotes": 69,
+      "dvkTotalVotes": 76,
       "knownSeatsOverride": null
     },
     {
