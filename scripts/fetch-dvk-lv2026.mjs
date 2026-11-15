@@ -2,7 +2,7 @@
 /**
  * Prenos in preverjanje uradnih podatkov DVK (volitve.dvk-rs.si/lv2026):
  * - #/udelezba (`data/data.json` + `data/obcine-press/obcina_slovenska_bistrica.json`)
- * - #/obcine/slovenska_bistrica/rezultati (občinski županski in svetniški rezultati `rez`, `kand_rez` ter šifrant `data/liste.json`)
+ * - #/obcine/slovenska_bistrica/rezultati (`rez.rez_zup`, `rez.rez_svet`, `kand_rez`, `data/liste.json`)
  *
  * Uporablja se v GitHub Actions (ali ročno z `npm run sync:dvk`) in posodobi
  * datoteko public/lv2026-data.json, ki jo bere statična aplikacija na GitHub Pages.
@@ -32,10 +32,11 @@ const MAYOR_TEMPLATES = [
   { id: 'spaninger', name: 'Matej Španinger', matchers: ['španinger', 'spaninger'] },
 ];
 
+// Vključuje tudi dejansko DVK tipkarsko napako "GIBANJE SVODODA" v obcine-press JSON-u
 const COUNCIL_LIST_TEMPLATES = [
   { id: 'sls', matchers: ['slovenska ljudska stranka', 'sls'] },
   { id: 'sds', matchers: ['slovenska demokratska stranka', 'sds'] },
-  { id: 'svoboda', matchers: ['gibanje svoboda', 'svoboda'] },
+  { id: 'svoboda', matchers: ['gibanje svoboda', 'gibanje svododa', 'svoboda', 'svododa'] },
   { id: 'sd', matchers: ['socialni demokrati', 'sd'] },
   { id: 'nsi-fokus', matchers: ['nova slovenija', 'nsi', 'fokus'] },
   { id: 'sg', matchers: ['stranka generacij', 'sg'] },
@@ -160,10 +161,11 @@ function extractMayoralCandidates(sb, press, hasResults) {
     return MAYOR_TEMPLATES.map((t) => ({ id: t.id, name: t.name, votes: null }));
   }
 
+  // Primarni vir z vsemi 4 kandidati je `press.rez.rez_zup`, dopolnilno pa `sb.kand_rez`
   const rawList = [
-    ...collectObjects(sb?.rez, ['kand', 'kandidati', 'zupan', 'zupani', 'rezultati']),
-    ...collectObjects(sb?.kand_rez, ['kand', 'kandidati', 'zupan', 'zupani', 'rezultati']),
-    ...collectObjects(press?.rez, ['kand', 'kandidati', 'zupan', 'zupani', 'rezultati']),
+    ...collectObjects(press?.rez, ['rez_zup', 'kand', 'kandidati', 'zupan', 'zupani', 'rezultati']),
+    ...collectObjects(sb?.kand_rez, ['rez_zup', 'kand', 'kandidati', 'zupan', 'zupani', 'rezultati']),
+    ...collectObjects(sb?.rez, ['rez_zup', 'kand', 'kandidati', 'zupan', 'zupani']),
   ];
 
   return MAYOR_TEMPLATES.map((template) => {
@@ -184,6 +186,28 @@ function extractMayoralCandidates(sb, press, hasResults) {
   });
 }
 
+function matchListTemplateId(item, listeMap) {
+  const dictEntry = item?.st ? listeMap.get(String(item.st)) : null;
+  const label = [
+    item?.naz,
+    item?.naziv,
+    item?.kratica,
+    item?.knaz,
+    dictEntry?.naz,
+    dictEntry?.knaz,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+
+  for (const template of COUNCIL_LIST_TEMPLATES) {
+    if (template.matchers.some((m) => label.includes(m))) {
+      return template.id;
+    }
+  }
+  return null;
+}
+
 function extractCouncilLists(sb, press, listeMap, hasResults) {
   const emptyVotes = () => ({ ve1: null, ve2: null, ve3: null, ve4: null });
   if (!hasResults) {
@@ -195,64 +219,77 @@ function extractCouncilLists(sb, press, listeMap, hasResults) {
     }));
   }
 
-  const rawLists = [
-    ...collectObjects(sb?.rez, ['liste', 'svet', 'obcinski_svet', 'stranke']),
-    ...collectObjects(sb?.kand_rez, ['liste', 'svet', 'obcinski_svet', 'stranke']),
-    ...collectObjects(press?.rez, ['liste', 'svet', 'obcinski_svet', 'stranke']),
+  // DVK obcine-press JSON vsebuje `rez.rez_svet` z zapisi { man, ve: 1..4, st, naz, gl, prc }
+  const rawSvet = [
+    ...collectObjects(press?.rez, ['rez_svet', 'liste', 'svet', 'obcinski_svet', 'stranke']),
+    ...collectObjects(sb?.rez, ['rez_svet', 'liste', 'svet', 'obcinski_svet', 'stranke']),
   ];
 
-  return COUNCIL_LIST_TEMPLATES.map((template) => {
-    const matched = rawLists.find((item) => {
-      const dictEntry = item?.st ? listeMap.get(String(item.st)) : null;
-      const label = [
-        item?.naz,
-        item?.naziv,
-        item?.kratica,
-        item?.knaz,
-        dictEntry?.naz,
-        dictEntry?.knaz,
-      ]
-        .filter(Boolean)
-        .join(' ')
-        .toLowerCase();
-      return template.matchers.some((m) => label.includes(m));
+  const byId = new Map();
+  for (const t of COUNCIL_LIST_TEMPLATES) {
+    byId.set(t.id, {
+      id: t.id,
+      votesByUnit: emptyVotes(),
+      dvkTotalVotes: 0,
+      hasAnyUnitVotes: false,
+      dvkSeatsSum: 0,
+      hasAnySeats: false,
     });
+  }
 
-    const votesByUnit = emptyVotes();
-    let dvkTotalVotes = null;
-    let knownSeatsOverride = null;
+  for (const item of rawSvet) {
+    const id = matchListTemplateId(item, listeMap);
+    if (!id) continue;
+    const target = byId.get(id);
+    if (!target) continue;
 
-    if (matched && typeof matched === 'object') {
-      if (toInt(matched.ve1) !== null) votesByUnit.ve1 = toInt(matched.ve1);
-      if (toInt(matched.ve2) !== null) votesByUnit.ve2 = toInt(matched.ve2);
-      if (toInt(matched.ve3) !== null) votesByUnit.ve3 = toInt(matched.ve3);
-      if (toInt(matched.ve4) !== null) votesByUnit.ve4 = toInt(matched.ve4);
-
-      dvkTotalVotes = toInt(
-        matched.gl ?? matched.glas ?? matched.glasovi ?? matched.skupaj
-      );
-      knownSeatsOverride = toInt(
-        matched.mandati ?? matched.mand ?? matched.sedezi
-      );
+    const unitNum = Number(item?.ve);
+    const votes = toInt(item?.gl ?? item?.glas ?? item?.glasovi);
+    if (unitNum >= 1 && unitNum <= 4 && votes !== null) {
+      target.votesByUnit[`ve${unitNum}`] = votes;
+      target.dvkTotalVotes += votes;
+      target.hasAnyUnitVotes = true;
+    } else if (votes !== null && !target.hasAnyUnitVotes) {
+      target.dvkTotalVotes += votes;
+      target.hasAnyUnitVotes = true;
     }
 
+    const man = toInt(item?.man ?? item?.mandati ?? item?.mand);
+    if (man !== null && votes !== null && votes > 0) {
+      target.dvkSeatsSum += man;
+      target.hasAnySeats = true;
+    }
+  }
+
+  return COUNCIL_LIST_TEMPLATES.map((t) => {
+    const entry = byId.get(t.id);
     return {
-      id: template.id,
-      votesByUnit,
-      dvkTotalVotes,
-      knownSeatsOverride,
+      id: t.id,
+      votesByUnit: entry.votesByUnit,
+      dvkTotalVotes: entry.hasAnyUnitVotes ? entry.dvkTotalVotes : null,
+      knownSeatsOverride: null,
     };
   });
 }
 
 function extractInvalidBallots(sb, press) {
-  for (const src of [sb?.rez, press?.rez]) {
+  for (const src of [press?.rez, sb?.rez]) {
     if (src && typeof src === 'object' && !Array.isArray(src)) {
       const nev = toInt(src.nev ?? src.neveljavni ?? src.neveljavne);
       if (nev !== null) return nev;
     }
   }
   return null;
+}
+
+function extractCountedBallots(sb, press) {
+  for (const src of [press?.rez, sb?.rez]) {
+    if (src && typeof src === 'object' && !Array.isArray(src)) {
+      const gl = toInt(src.gl ?? src.glas ?? src.glasovi);
+      if (gl !== null) return gl;
+    }
+  }
+  return 0;
 }
 
 async function main() {
@@ -370,8 +407,16 @@ async function main() {
     nastavitve.datum ?? pressJson?.datum ?? nastavitve.timestamp
   );
 
+  const dvkCountedPct =
+    typeof sb.prestetih_glasov === 'number'
+      ? toPct(sb.prestetih_glasov)
+      : null;
+  const dvkVotesCounted = extractCountedBallots(sb, pressJson);
+
   const lastUpdatedLabel = hasResults
-    ? `${isFinal ? 'Končni' : 'Delni'} izidi DVK (${dvkClock ? `osveženo ${dvkClock}` : 'posodobljeno'})`
+    ? `${isFinal ? 'Končni' : 'Delni'} izidi DVK (${
+        dvkCountedPct !== null ? `preštetih ${formatPctSl(dvkCountedPct)} · ` : ''
+      }${dvkVotesCounted} glasov${dvkClock ? ` · osveženo ${dvkClock}` : ''})`
     : `Udeležba ob ${latestTurnout?.time ?? casUdelezba ?? '16:00'}: SB ${formatPctSl(
         latestTurnout?.municipalityPct
       )} · SI ${formatPctSl(latestTurnout?.sloveniaPct)}${
@@ -395,7 +440,8 @@ async function main() {
     hasResults,
     casUdelezba: casUdelezba ?? null,
     dvkUpdatedAt: dvkFormattedDate ?? nastavitve.datum ?? null,
-    dvkVotesCounted: toInt(sb.prestetih_glasov) ?? 0,
+    dvkVotesCounted,
+    dvkCountedPct,
     invalidBallotsMayor,
     lastUpdatedLabel,
     eligibleVotersMunicipality,
@@ -408,7 +454,7 @@ async function main() {
   await fs.writeFile(OUTPUT_PATH, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
 
   console.log(
-    `Uspešno posodobljeno public/lv2026-data.json | cas_udelezba=${output.casUdelezba} | SB=${latestTurnout?.municipalityPct}% (${latestTurnout?.municipalityVoters}/${latestTurnout?.municipalityEligible}) | SI=${latestTurnout?.sloveniaPct}% | has_rezultat=${output.hasResults}`
+    `Uspešno posodobljeno public/lv2026-data.json | cas_udelezba=${output.casUdelezba} | SB=${latestTurnout?.municipalityPct}% (${latestTurnout?.municipalityVoters}/${latestTurnout?.municipalityEligible}) | SI=${latestTurnout?.sloveniaPct}% | has_rezultat=${output.hasResults} | counted=${dvkVotesCounted} (${dvkCountedPct}%)`
   );
 }
 

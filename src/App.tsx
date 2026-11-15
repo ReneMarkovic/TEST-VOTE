@@ -156,6 +156,7 @@ export default function App() {
             casUdelezba: remote.casUdelezba ?? prev.casUdelezba,
             dvkUpdatedAt: remote.dvkUpdatedAt ?? prev.dvkUpdatedAt,
             dvkVotesCounted: remote.dvkVotesCounted ?? prev.dvkVotesCounted,
+            dvkCountedPct: remote.dvkCountedPct ?? prev.dvkCountedPct,
             invalidBallotsMayor:
               remote.invalidBallotsMayor ?? prev.invalidBallotsMayor,
             lastUpdatedLabel: remote.lastUpdatedLabel ?? prev.lastUpdatedLabel,

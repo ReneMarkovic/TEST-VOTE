@@ -118,7 +118,12 @@ export const MayoralAndCouncilSection: React.FC<MayoralAndCouncilSectionProps> =
               <span>Neveljavni: {formatInt(dataset.invalidBallotsMayor)}</span>
             )}
             {mode === 'lv2026' && typeof dataset.dvkVotesCounted === 'number' && (
-              <span>Prešteti glasovi DVK: {formatInt(dataset.dvkVotesCounted)}</span>
+              <span>
+                Prešteti glasovi DVK: {formatInt(dataset.dvkVotesCounted)}
+                {typeof dataset.dvkCountedPct === 'number'
+                  ? ` (${formatPct(dataset.dvkCountedPct)})`
+                  : ''}
+              </span>
             )}
           </div>
         </div>

@@ -76,6 +76,7 @@ export interface ElectionDataset {
   casUdelezba?: string | null;
   dvkUpdatedAt?: string | null;
   dvkVotesCounted?: number | null;
+  dvkCountedPct?: number | null;
   lastUpdatedLabel: string;
   sourceNote: string;
   eligibleVotersMunicipality: number | null;
