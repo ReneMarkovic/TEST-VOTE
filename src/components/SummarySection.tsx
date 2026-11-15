@@ -3,6 +3,7 @@ import { Check, Copy, Download, ExternalLink, Printer } from 'lucide-react';
 import type { ElectionDataset } from '../types/election';
 import {
   DVK_LV2026_URL,
+  DVK_SB_REZULTATI_URL,
   OB_SLOVENSKA_BISTRICA_URL,
 } from '../data/slovenskaBistricaData';
 import { generateSummaryText } from '../utils/electionCalculations';
@@ -115,7 +116,16 @@ export const SummarySection: React.FC<SummarySectionProps> = ({ dataset }) => {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-[#0F4C81] hover:underline"
           >
-            <span>DVK: Lokalne volitve 2026 (udeležba in izidi)</span>
+            <span>DVK: Udeležba 2026</span>
+            <ExternalLink className="w-3 h-3" aria-hidden="true" />
+          </a>
+          <a
+            href={DVK_SB_REZULTATI_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[#0F4C81] hover:underline"
+          >
+            <span>DVK: Rezultati Slovenska Bistrica</span>
             <ExternalLink className="w-3 h-3" aria-hidden="true" />
           </a>
           <a

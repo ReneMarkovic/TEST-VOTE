@@ -6,6 +6,7 @@
   "casUdelezba": "16:00",
   "dvkUpdatedAt": "15. 11. 2026 ob 17:00",
   "dvkVotesCounted": 0,
+  "invalidBallotsMayor": null,
   "lastUpdatedLabel": "Udeležba ob 16:00: SB 33,02 % · SI 36,77 % (osveženo DVK 17:00)",
   "eligibleVotersMunicipality": 20336,
   "turnout": [
@@ -70,7 +71,9 @@
         "ve2": null,
         "ve3": null,
         "ve4": null
-      }
+      },
+      "dvkTotalVotes": null,
+      "knownSeatsOverride": null
     },
     {
       "id": "sds",
@@ -79,7 +82,9 @@
         "ve2": null,
         "ve3": null,
         "ve4": null
-      }
+      },
+      "dvkTotalVotes": null,
+      "knownSeatsOverride": null
     },
     {
       "id": "svoboda",
@@ -88,7 +93,9 @@
         "ve2": null,
         "ve3": null,
         "ve4": null
-      }
+      },
+      "dvkTotalVotes": null,
+      "knownSeatsOverride": null
     },
     {
       "id": "sd",
@@ -97,7 +104,9 @@
         "ve2": null,
         "ve3": null,
         "ve4": null
-      }
+      },
+      "dvkTotalVotes": null,
+      "knownSeatsOverride": null
     },
     {
       "id": "nsi-fokus",
@@ -106,7 +115,9 @@
         "ve2": null,
         "ve3": null,
         "ve4": null
-      }
+      },
+      "dvkTotalVotes": null,
+      "knownSeatsOverride": null
     },
     {
       "id": "sg",
@@ -115,7 +126,9 @@
         "ve2": null,
         "ve3": null,
         "ve4": null
-      }
+      },
+      "dvkTotalVotes": null,
+      "knownSeatsOverride": null
     },
     {
       "id": "demokrati",
@@ -124,7 +137,9 @@
         "ve2": null,
         "ve3": null,
         "ve4": null
-      }
+      },
+      "dvkTotalVotes": null,
+      "knownSeatsOverride": null
     },
     {
       "id": "sns",
@@ -133,7 +148,9 @@
         "ve2": null,
         "ve3": null,
         "ve4": null
-      }
+      },
+      "dvkTotalVotes": null,
+      "knownSeatsOverride": null
     },
     {
       "id": "resnica",
@@ -142,7 +159,9 @@
         "ve2": null,
         "ve3": null,
         "ve4": null
-      }
+      },
+      "dvkTotalVotes": null,
+      "knownSeatsOverride": null
     }
   ]
 }

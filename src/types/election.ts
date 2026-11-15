@@ -31,6 +31,7 @@ export interface CouncilList {
   fullName: string;
   color: string;
   votesByUnit: Record<string, number | null>;
+  dvkTotalVotes?: number | null;
   seats2022: number;
   knownSeatsOverride?: number | null;
 }

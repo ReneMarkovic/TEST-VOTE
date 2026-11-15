@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ExternalLink, RotateCcw, Upload, X } from 'lucide-react';
 import type { ElectionDataset, ElectionStage } from '../types/election';
-import { DVK_LV2026_URL } from '../data/slovenskaBistricaData';
+import { DVK_LV2026_URL, DVK_SB_REZULTATI_URL } from '../data/slovenskaBistricaData';
 import { parseDvkImportText } from '../utils/electionCalculations';
 
 export type ImportModalTab = 'paste' | 'turnout' | 'mayor' | 'council' | 'ks';
@@ -155,15 +155,26 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                 <p>
                   Neposreden klic brskalnika na uradni vir DVK omejuje pravilo CORS (dovoljen je le lokalni izvor DVK), zato podatke periodično zajema GitHub Actions v datoteko <code className="font-mono">public/lv2026-data.json</code>. Če želite rezultate vnesti takoj ročno, jih kopirajte s portala DVK in prilepite spodaj.
                 </p>
-                <a
-                  href={DVK_LV2026_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 font-medium text-[#0F4C81] hover:underline"
-                >
-                  <span>Odpri volitve.dvk-rs.si/lv2026/#/udelezba</span>
-                  <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                </a>
+                <div className="flex flex-wrap items-center gap-4">
+                  <a
+                    href={DVK_LV2026_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 font-medium text-[#0F4C81] hover:underline"
+                  >
+                    <span>Odpri DVK udeležbo (#/udelezba)</span>
+                    <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                  </a>
+                  <a
+                    href={DVK_SB_REZULTATI_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 font-medium text-[#0F4C81] hover:underline"
+                  >
+                    <span>Odpri DVK rezultate za Občino Slovenska Bistrica</span>
+                    <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                  </a>
+                </div>
               </div>
 
               <div className="space-y-1.5">

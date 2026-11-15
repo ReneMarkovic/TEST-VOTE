@@ -9,6 +9,7 @@ import { SummarySection } from './components/SummarySection';
 import { ImportModal, type ImportModalTab } from './components/ImportModal';
 import {
   DVK_LV2026_URL,
+  DVK_SB_REZULTATI_URL,
   HISTORICAL_LV2022_DATA,
   INITIAL_LV2026_DATA,
 } from './data/slovenskaBistricaData';
@@ -137,6 +138,8 @@ export default function App() {
                 ve3: rCl.votesByUnit?.ve3 ?? cl.votesByUnit.ve3,
                 ve4: rCl.votesByUnit?.ve4 ?? cl.votesByUnit.ve4,
               },
+              dvkTotalVotes: rCl.dvkTotalVotes ?? cl.dvkTotalVotes,
+              knownSeatsOverride: rCl.knownSeatsOverride ?? cl.knownSeatsOverride,
             };
           });
           const mergedKs = prev.ksCandidates.map((kc) => {
@@ -153,6 +156,8 @@ export default function App() {
             casUdelezba: remote.casUdelezba ?? prev.casUdelezba,
             dvkUpdatedAt: remote.dvkUpdatedAt ?? prev.dvkUpdatedAt,
             dvkVotesCounted: remote.dvkVotesCounted ?? prev.dvkVotesCounted,
+            invalidBallotsMayor:
+              remote.invalidBallotsMayor ?? prev.invalidBallotsMayor,
             lastUpdatedLabel: remote.lastUpdatedLabel ?? prev.lastUpdatedLabel,
             eligibleVotersMunicipality:
               remote.eligibleVotersMunicipality ?? prev.eligibleVotersMunicipality,
@@ -380,14 +385,25 @@ export default function App() {
                   {autoRefresh ? 'Samodejno: vklopljeno (60 s)' : 'Samodejno (60 s)'}
                 </button>
               </div>
-              <a
-                href={DVK_LV2026_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-[#0F4C81] hover:underline"
-              >
-                Uradni portal DVK: volitve.dvk-rs.si/lv2026
-              </a>
+              <div className="flex flex-wrap items-center gap-3 text-xs">
+                <a
+                  href={DVK_LV2026_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#0F4C81] hover:underline"
+                >
+                  DVK udeležba
+                </a>
+                <span className="text-slate-300" aria-hidden="true">·</span>
+                <a
+                  href={DVK_SB_REZULTATI_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#0F4C81] hover:underline"
+                >
+                  DVK rezultati (Občina Slovenska Bistrica)
+                </a>
+              </div>
             </div>
           </div>
 

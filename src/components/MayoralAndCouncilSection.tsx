@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { CheckCircle2, Clock, PencilLine, Scale } from 'lucide-react';
+import { CheckCircle2, Clock, ExternalLink, PencilLine, Scale } from 'lucide-react';
 import type { ElectionDataset, ElectionDatasetMode } from '../types/election';
+import { DVK_SB_REZULTATI_URL } from '../data/slovenskaBistricaData';
 import {
   computeCouncilResults,
   computeMayoralResults,
@@ -55,7 +56,16 @@ export const MayoralAndCouncilSection: React.FC<MayoralAndCouncilSectionProps> =
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0 no-print">
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0 no-print">
+            <a
+              href={DVK_SB_REZULTATI_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors whitespace-nowrap shrink-0"
+            >
+              <span>DVK rezultati (Občina SB)</span>
+              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
             {mode === 'lv2026' && (
               <button
                 type="button"
@@ -100,8 +110,16 @@ export const MayoralAndCouncilSection: React.FC<MayoralAndCouncilSectionProps> =
             )}
           </div>
 
-          <div className="font-mono text-xs text-slate-600 tabular-nums">
-            Veljavni glasovi: {formatInt(mayorOutcome.totalValidVotes || null)}
+          <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-slate-600 tabular-nums">
+            <span>
+              Veljavni glasovi: {formatInt(mayorOutcome.totalValidVotes || null)}
+            </span>
+            {mode === 'lv2026' && dataset.invalidBallotsMayor !== null && (
+              <span>Neveljavni: {formatInt(dataset.invalidBallotsMayor)}</span>
+            )}
+            {mode === 'lv2026' && typeof dataset.dvkVotesCounted === 'number' && (
+              <span>Prešteti glasovi DVK: {formatInt(dataset.dvkVotesCounted)}</span>
+            )}
           </div>
         </div>
 
@@ -191,7 +209,16 @@ export const MayoralAndCouncilSection: React.FC<MayoralAndCouncilSectionProps> =
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0 no-print">
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0 no-print">
+            <a
+              href={DVK_SB_REZULTATI_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors whitespace-nowrap shrink-0"
+            >
+              <span>DVK rezultati (Občina SB)</span>
+              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
             {mode === 'lv2026' && (
               <button
                 type="button"

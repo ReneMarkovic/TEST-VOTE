@@ -1,6 +1,8 @@
 import type { CouncilCandidate, ElectionDataset } from '../types/election';
 
 export const DVK_LV2026_URL = 'https://volitve.dvk-rs.si/lv2026/#/udelezba';
+export const DVK_SB_REZULTATI_URL =
+  'https://volitve.dvk-rs.si/lv2026/#/obcine/slovenska_bistrica/rezultati';
 export const OB_SLOVENSKA_BISTRICA_URL = 'https://www.slovenska-bistrica.si/';
 export const OVK_LISTS_URL = 'https://www.slovenska-bistrica.si/objave/101?subcategory=16915';
 

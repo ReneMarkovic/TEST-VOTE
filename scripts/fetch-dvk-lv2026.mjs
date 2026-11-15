@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * Prenos in preverjanje uradnih podatkov DVK (volitve.dvk-rs.si/lv2026)
- * za Občino Slovenska Bistrica (st: 113) in slovensko povprečje.
+ * Prenos in preverjanje uradnih podatkov DVK (volitve.dvk-rs.si/lv2026):
+ * - #/udelezba (`data/data.json` + `data/obcine-press/obcina_slovenska_bistrica.json`)
+ * - #/obcine/slovenska_bistrica/rezultati (občinski županski in svetniški rezultati `rez`, `kand_rez` ter šifrant `data/liste.json`)
  *
  * Uporablja se v GitHub Actions (ali ročno z `npm run sync:dvk`) in posodobi
- * datoteko public/lv2026-data.json, ki jo nato bere statična aplikacija na GitHub Pages.
+ * datoteko public/lv2026-data.json, ki jo bere statična aplikacija na GitHub Pages.
  */
 
 import fs from 'node:fs/promises';
@@ -19,6 +20,7 @@ const OUTPUT_PATH = path.join(ROOT_DIR, 'public', 'lv2026-data.json');
 const DVK_DATA_URL = 'https://volitve.dvk-rs.si/lv2026/data/data.json';
 const DVK_SB_PRESS_URL =
   'https://volitve.dvk-rs.si/lv2026/data/obcine-press/obcina_slovenska_bistrica.json';
+const DVK_LISTE_URL = 'https://volitve.dvk-rs.si/lv2026/data/liste.json';
 
 const MUNICIPALITY_ST = 113;
 const MUNICIPALITY_NAME = 'SLOVENSKA BISTRICA';
@@ -46,7 +48,6 @@ function toPct(raw) {
   if (typeof raw !== 'number' || !Number.isFinite(raw) || raw < 0) {
     return null;
   }
-  // DVK zapisuje odstotke kot deleže (npr. 0.3302 -> 33.02 %)
   const pct = raw <= 1 ? raw * 100 : raw;
   return Math.round(pct * 100) / 100;
 }
@@ -67,7 +68,6 @@ function normalizeTimeLabel(rawTime) {
 
 function formatDvkDateTime(isoString) {
   if (typeof isoString !== 'string' || !isoString.trim()) return null;
-  // DVK v `datum` navaja lokalni čas v obliki YYYY-MM-DDTHH:MM:SSZ (npr. 2026-11-15T17:00:00Z za 17:00)
   const match = isoString.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
   if (!match) return isoString;
   const [, year, month, day, hour, minute] = match;
@@ -140,35 +140,42 @@ function resolveCheckpointTarget(nastavitve) {
   return null;
 }
 
-function extractCandidateArray(rawRez) {
-  if (!rawRez) return [];
-  if (Array.isArray(rawRez)) return rawRez;
-  if (typeof rawRez === 'object') {
-    for (const key of ['kandidati', 'zupan', 'rezultati', 'kand']) {
-      if (Array.isArray(rawRez[key])) return rawRez[key];
+function collectObjects(root, keys) {
+  const items = [];
+  if (!root) return items;
+  if (Array.isArray(root)) {
+    items.push(...root);
+  } else if (typeof root === 'object') {
+    for (const k of keys) {
+      if (Array.isArray(root[k])) {
+        items.push(...root[k]);
+      }
     }
   }
-  return [];
+  return items;
 }
 
 function extractMayoralCandidates(sb, press, hasResults) {
   if (!hasResults) {
     return MAYOR_TEMPLATES.map((t) => ({ id: t.id, name: t.name, votes: null }));
   }
+
   const rawList = [
-    ...extractCandidateArray(sb?.rez),
-    ...extractCandidateArray(press?.rez),
-    ...extractCandidateArray(sb?.kand_rez),
+    ...collectObjects(sb?.rez, ['kand', 'kandidati', 'zupan', 'zupani', 'rezultati']),
+    ...collectObjects(sb?.kand_rez, ['kand', 'kandidati', 'zupan', 'zupani', 'rezultati']),
+    ...collectObjects(press?.rez, ['kand', 'kandidati', 'zupan', 'zupani', 'rezultati']),
   ];
 
   return MAYOR_TEMPLATES.map((template) => {
     const matched = rawList.find((item) => {
       const label = String(
-        item?.naz ?? item?.ime ?? item?.naziv ?? item?.kandidat ?? ''
+        item?.naz ?? item?.ime ?? item?.naziv ?? item?.kandidat ?? item?.priimek ?? ''
       ).toLowerCase();
       return template.matchers.some((m) => label.includes(m));
     });
-    const votes = toInt(matched?.gl ?? matched?.glas ?? matched?.glasovi);
+    const votes = toInt(
+      matched?.gl ?? matched?.glas ?? matched?.glasovi ?? matched?.st_gl
+    );
     return {
       id: template.id,
       name: template.name,
@@ -177,53 +184,86 @@ function extractMayoralCandidates(sb, press, hasResults) {
   });
 }
 
-function extractCouncilLists(sb, press, hasResults) {
+function extractCouncilLists(sb, press, listeMap, hasResults) {
   const emptyVotes = () => ({ ve1: null, ve2: null, ve3: null, ve4: null });
   if (!hasResults) {
     return COUNCIL_LIST_TEMPLATES.map((t) => ({
       id: t.id,
       votesByUnit: emptyVotes(),
+      dvkTotalVotes: null,
+      knownSeatsOverride: null,
     }));
   }
 
-  const rawLists = [];
-  for (const src of [sb?.rez, sb?.kand_rez, press?.rez]) {
-    if (src && typeof src === 'object' && !Array.isArray(src)) {
-      for (const key of ['liste', 'svet', 'obcinski_svet', 'stranke']) {
-        if (Array.isArray(src[key])) rawLists.push(...src[key]);
-      }
-    }
-  }
+  const rawLists = [
+    ...collectObjects(sb?.rez, ['liste', 'svet', 'obcinski_svet', 'stranke']),
+    ...collectObjects(sb?.kand_rez, ['liste', 'svet', 'obcinski_svet', 'stranke']),
+    ...collectObjects(press?.rez, ['liste', 'svet', 'obcinski_svet', 'stranke']),
+  ];
 
   return COUNCIL_LIST_TEMPLATES.map((template) => {
     const matched = rawLists.find((item) => {
-      const label = String(
-        item?.naz ?? item?.naziv ?? item?.kratica ?? ''
-      ).toLowerCase();
+      const dictEntry = item?.st ? listeMap.get(String(item.st)) : null;
+      const label = [
+        item?.naz,
+        item?.naziv,
+        item?.kratica,
+        item?.knaz,
+        dictEntry?.naz,
+        dictEntry?.knaz,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
       return template.matchers.some((m) => label.includes(m));
     });
+
     const votesByUnit = emptyVotes();
+    let dvkTotalVotes = null;
+    let knownSeatsOverride = null;
+
     if (matched && typeof matched === 'object') {
       if (toInt(matched.ve1) !== null) votesByUnit.ve1 = toInt(matched.ve1);
       if (toInt(matched.ve2) !== null) votesByUnit.ve2 = toInt(matched.ve2);
       if (toInt(matched.ve3) !== null) votesByUnit.ve3 = toInt(matched.ve3);
       if (toInt(matched.ve4) !== null) votesByUnit.ve4 = toInt(matched.ve4);
+
+      dvkTotalVotes = toInt(
+        matched.gl ?? matched.glas ?? matched.glasovi ?? matched.skupaj
+      );
+      knownSeatsOverride = toInt(
+        matched.mandati ?? matched.mand ?? matched.sedezi
+      );
     }
+
     return {
       id: template.id,
       votesByUnit,
+      dvkTotalVotes,
+      knownSeatsOverride,
     };
   });
 }
 
+function extractInvalidBallots(sb, press) {
+  for (const src of [sb?.rez, press?.rez]) {
+    if (src && typeof src === 'object' && !Array.isArray(src)) {
+      const nev = toInt(src.nev ?? src.neveljavni ?? src.neveljavne);
+      if (nev !== null) return nev;
+    }
+  }
+  return null;
+}
+
 async function main() {
   console.log(`Prenašam uradne podatke DVK z ${DVK_DATA_URL} ...`);
-  const [dataJson, pressJson, existing] = await Promise.all([
+  const [dataJson, pressJson, listeJson, existing] = await Promise.all([
     fetchJson(DVK_DATA_URL),
     fetchJson(DVK_SB_PRESS_URL).catch((err) => {
       console.warn(`Opozorilo: press endpoint ni dosegljiv (${err.message}).`);
       return null;
     }),
+    fetchJson(DVK_LISTE_URL).catch(() => []),
     readExistingOutput(),
   ]);
 
@@ -245,6 +285,12 @@ async function main() {
     throw new Error('Občina Slovenska Bistrica (st: 113) ni najdena v DVK data.json.');
   }
 
+  const listeMap = new Map(
+    Array.isArray(listeJson)
+      ? listeJson.map((entry) => [String(entry.st), entry])
+      : []
+  );
+
   const casUdelezba = resolveCheckpointTarget(nastavitve);
   const existingByTime = new Map(
     Array.isArray(existing?.turnout)
@@ -252,8 +298,6 @@ async function main() {
       : []
   );
 
-  // DVK ob 16.00 (cas_udelezba: "16:00") podatke zapisuje v `udel`, medtem ko je `udel_16` še null.
-  // Zgodnejši presek ob 11.00 pa je v `udel_11`.
   const cp11SourceSb =
     sb.udel_11 ?? (casUdelezba === '11:00' ? sb.udel : null);
   const cp11SourceSi =
@@ -305,7 +349,8 @@ async function main() {
   ];
 
   const hasResultFlag = Boolean(nastavitve.has_rezultat);
-  const hasActualResultData = sb.rez !== null || pressJson?.rez !== null;
+  const hasActualResultData =
+    sb.rez !== null || sb.kand_rez !== null || pressJson?.rez !== null;
   const hasResults = hasResultFlag && hasActualResultData;
   const isFinal = Boolean(nastavitve.is_final);
 
@@ -340,7 +385,8 @@ async function main() {
     20336;
 
   const mayoralCandidates = extractMayoralCandidates(sb, pressJson, hasResults);
-  const councilLists = extractCouncilLists(sb, pressJson, hasResults);
+  const councilLists = extractCouncilLists(sb, pressJson, listeMap, hasResults);
+  const invalidBallotsMayor = extractInvalidBallots(sb, pressJson);
 
   const output = {
     year: 2026,
@@ -350,6 +396,7 @@ async function main() {
     casUdelezba: casUdelezba ?? null,
     dvkUpdatedAt: dvkFormattedDate ?? nastavitve.datum ?? null,
     dvkVotesCounted: toInt(sb.prestetih_glasov) ?? 0,
+    invalidBallotsMayor,
     lastUpdatedLabel,
     eligibleVotersMunicipality,
     turnout,

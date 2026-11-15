@@ -143,8 +143,21 @@ export function computeCouncilResults(
     unitAllocations[unit.id] = allocateDHondtForUnit(lists, unit.id, unit.seats);
   }
 
+  const hasAggregateVotes = lists.some(
+    (l) => typeof l.dvkTotalVotes === 'number' && l.dvkTotalVotes > 0
+  );
+  const aggregateTotalVotes = lists.reduce(
+    (sum, l) => sum + (l.dvkTotalVotes ?? 0),
+    0
+  );
+  const effectiveTotalVotes = hasVoteData ? totalVotes : aggregateTotalVotes;
+
   const computed: ComputedListResult[] = lists.map((list) => {
-    const listVotes = units.reduce((sum, u) => sum + (list.votesByUnit[u.id] ?? 0), 0);
+    const unitVotesSum = units.reduce((sum, u) => sum + (list.votesByUnit[u.id] ?? 0), 0);
+    const listVotes =
+      hasVoteData || unitVotesSum > 0
+        ? unitVotesSum
+        : (list.dvkTotalVotes ?? 0);
     const seatsByUnit: Record<string, number> = {};
     let seatsTotal = 0;
 
@@ -161,7 +174,7 @@ export function computeCouncilResults(
     return {
       ...list,
       totalVotes: listVotes,
-      pct: totalVotes > 0 ? (listVotes / totalVotes) * 100 : null,
+      pct: effectiveTotalVotes > 0 ? (listVotes / effectiveTotalVotes) * 100 : null,
       seatsTotal,
       seatsByUnit,
       seatDeltaFrom2022: seatsTotal - list.seats2022,
@@ -178,9 +191,9 @@ export function computeCouncilResults(
 
   return {
     lists: computed,
-    totalVotes,
+    totalVotes: effectiveTotalVotes,
     totalSeatsAllocated,
-    hasVoteData,
+    hasVoteData: hasVoteData || hasAggregateVotes || hasKnownOverrides,
     unitTotals,
   };
 }
@@ -324,8 +337,9 @@ export function parseDvkImportText(rawText: string, current: ElectionDataset): P
       }
     }
 
-    // Extract integer vote count (supports "1.234", "1 234", or "1234")
-    const numMatches = [...line.matchAll(/\b(\d{1,3}(?:[.\s]\d{3})+|\d{1,6})\b/g)];
+    // Strip percentages (e.g. "62,15 %") before extracting integer vote counts from lines copied from #/obcine/.../rezultati
+    const lineWithoutPct = line.replace(/\d{1,3}(?:[.,]\d{1,2})?\s*%/g, ' ');
+    const numMatches = [...lineWithoutPct.matchAll(/\b(\d{1,3}(?:[.\s]\d{3})+|\d{1,6})\b/g)];
     const candidateNums = numMatches
       .map((m) => parseInt(m[1].replace(/[.\s]/g, ''), 10))
       .filter((n) => !Number.isNaN(n) && n >= 0 && n < 50000);
