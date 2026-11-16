@@ -4,11 +4,11 @@
   "stage": "delni",
   "hasResults": true,
   "casUdelezba": "19:00",
-  "dvkUpdatedAt": "16. 11. 2026 ob 12:00",
+  "dvkUpdatedAt": "16. 11. 2026 ob 13:00",
   "dvkVotesCounted": 9636,
   "dvkCountedPct": 99.96,
   "invalidBallotsMayor": 138,
-  "lastUpdatedLabel": "Delni izidi DVK (preštetih 99,96 % · 9636 glasov · osveženo 12:00)",
+  "lastUpdatedLabel": "Delni izidi DVK (preštetih 99,96 % · 9636 glasov · osveženo 13:00)",
   "eligibleVotersMunicipality": 20337,
   "turnout": [
     {
@@ -36,7 +36,7 @@
       "time": "19:00",
       "municipalityPct": 47.4,
       "pragerskoPct": null,
-      "sloveniaPct": 53.97,
+      "sloveniaPct": 53.98,
       "municipalityVoters": 9640,
       "municipalityEligible": 20337,
       "certificatesCount": null
